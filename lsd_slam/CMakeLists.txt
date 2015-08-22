@@ -1,0 +1,20 @@
+FILE(GLOB_RECURSE LSD_SOURCES "*/*.cpp")
+FILE(APPEND LSD_SOURCES
+	"LiveSLAMWrapper.cpp"
+	"SlamSystem.cpp"
+	)
+
+add_library(lsdslam SHARED ${LSD_SOURCES})
+target_link_libraries(lsdslam
+	${FABMAP_LIB}
+	${CSPARSE_LIBRARY}
+	${G2O_CORE_LIBRARY}
+	${G2O_EXT_CSPARSE}
+	${G2O_SOLVER_CSPARSE}
+	${G2O_SOLVER_CSPARSE_EXTENSION}
+	${G2O_STUFF_LIBRARY}
+	${G2O_TYPES_SBA}
+	${G2O_TYPES_SIM3}
+	${Boost_LIBRARIES}
+	${OpenCV_LIBS}
+	)
