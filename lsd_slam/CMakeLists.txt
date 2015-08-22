@@ -1,11 +1,11 @@
 FILE(GLOB_RECURSE LSD_SOURCES "*/*.cpp")
-FILE(APPEND LSD_SOURCES
+LIST(APPEND LSD_SOURCES
 	"LiveSLAMWrapper.cpp"
 	"SlamSystem.cpp"
 	)
 
-add_library(lsdslam SHARED ${LSD_SOURCES})
-target_link_libraries(lsdslam
+ADD_LIBRARY(lsdslam SHARED ${LSD_SOURCES})
+TARGET_LINK_LIBRARIES(lsdslam
 	${FABMAP_LIB}
 	${CSPARSE_LIBRARY}
 	${G2O_CORE_LIBRARY}
