@@ -18,7 +18,7 @@ SET(Boost_USE_MULTITHREADED ON)
 SET(Boost_USE_STATIC_RUNTIME OFF)
 FIND_PACKAGE(Boost 1.45.0 COMPONENTS thread)
 
-include_directories(
+INCLUDE_DIRECTORIES(
 	${EIGEN3_INCLUDE_DIR}
 	${PROJECT_SOURCE_DIR}/lsd_slam/
 	${PROJECT_SOURCE_DIR}/thirdparty/Sophus
@@ -28,3 +28,4 @@ include_directories(
 )
 
 ADD_SUBDIRECTORY(lsd_slam)
+ADD_SUBDIRECTORY(app)
