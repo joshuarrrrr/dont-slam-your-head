@@ -1,0 +1,23 @@
+{
+	"folders":
+	[
+		{
+			"path": "..",
+            "folder_exclude_patterns": ["build"],
+		}
+	],
+    "settings":
+    {
+        "tab_size": 4,
+        "trim_trailing_white_space_on_save": true
+    },
+    "build_systems":
+    [
+      {
+        "name": "don't SLAM your head",
+        "file_regex": "^(..[^:]*):(.*)$",
+        "working_dir": "${project_path}/..",
+        "cmd":  ["./utils/make.sh"]
+      }
+    ]
+}
