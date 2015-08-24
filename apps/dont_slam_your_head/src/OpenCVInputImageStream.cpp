@@ -44,6 +44,9 @@ void OpenCVInputImageStream::setCalibration(std::string file) {
 
 		width_ = undistorter->getOutputWidth();
 		height_ = undistorter->getOutputHeight();
+
+		capture.set(CV_CAP_PROP_FRAME_WIDTH, width_);
+		capture.set(CV_CAP_PROP_FRAME_HEIGHT, height_);
 	}
 
 	haveCalib = true;
