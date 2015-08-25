@@ -25,20 +25,20 @@ public:
 
 	/*virtual*/ void setCalibration(std::string file);
 
+	 bool setVideoCapture(cv::VideoCapture* cap);
+
 	/**
 	 * Thread main function.
 	 */
 	void operator()();
 
 private:
+	void setVideoResolution() const;
+
+private:
 	bool haveCalib;
 	Undistorter* undistorter;
-
-	std::string vid_channel;
-
-	int lastSEQ;
-
-	cv::VideoCapture capture;
+	cv::VideoCapture* capture;
 };
 
 }

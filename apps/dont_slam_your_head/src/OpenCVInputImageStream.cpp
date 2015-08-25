@@ -3,18 +3,16 @@
 namespace lsd_slam
 {
 
-OpenCVInputImageStream::OpenCVInputImageStream() {
+OpenCVInputImageStream::OpenCVInputImageStream()
+: capture(nullptr) {
 	// wait for cam calib
 	width_ = height_ = 0;
 
 	// imagebuffer
 	imageBuffer = new NotifyBuffer<TimestampedMat>(8);
 	undistorter = 0;
-	lastSEQ = 0;
 
 	haveCalib = false;
-
-	capture.open(0);
 }
 
 OpenCVInputImageStream::~OpenCVInputImageStream() {
@@ -44,20 +42,35 @@ void OpenCVInputImageStream::setCalibration(std::string file) {
 
 		width_ = undistorter->getOutputWidth();
 		height_ = undistorter->getOutputHeight();
-
-		capture.set(CV_CAP_PROP_FRAME_WIDTH, width_);
-		capture.set(CV_CAP_PROP_FRAME_HEIGHT, height_);
 	}
 
 	haveCalib = true;
+	setVideoResolution();
+}
+
+bool OpenCVInputImageStream::setVideoCapture(cv::VideoCapture* cap) {
+	capture = cap;
+	setVideoResolution();
+	return (capture != nullptr);
+}
+
+void OpenCVInputImageStream::setVideoResolution() const {
+	if (haveCalib && capture != nullptr) {
+		capture->set(CV_CAP_PROP_FRAME_WIDTH, width_);
+		capture->set(CV_CAP_PROP_FRAME_HEIGHT, height_);
+	}
 }
 
 void OpenCVInputImageStream::operator()() {
+	if (!capture) {
+		std::cerr << "No video capture given!" << std::endl;
+		return;
+	}
 	if (!haveCalib) {
 		std::cerr << "no calibration" << std::endl;
 		return;
 	}
-	if (!capture.isOpened())
+	if (!capture->isOpened())
 	{
 		std::cerr << "NO valid camera capture" << std::endl;
 		return;
@@ -68,7 +81,7 @@ void OpenCVInputImageStream::operator()() {
 		bufferItem.timestamp = Timestamp::now();
 		//IplImage* frame;
 		cv::Mat frame;
-		capture >> frame;
+		capture->read(frame);
 		if (undistorter != 0)
 		{
 			assert(undistorter->isValid());
