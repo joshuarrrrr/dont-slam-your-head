@@ -1,0 +1,3 @@
+[submodule "utils/android-cmake"]
+	path = utils/android-cmake
+	url = git@github.com:taka-no-me/android-cmake.git
