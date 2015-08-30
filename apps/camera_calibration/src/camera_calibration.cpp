@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <time.h>
@@ -539,6 +540,27 @@ static void saveCameraParams( Settings& s, Size& imageSize, Mat& cameraMatrix, M
     }
 }
 
+static void saveLSDCalibrationFile( Size& imageSize, Mat& cameraMatrix, Mat& distCoeffs )
+{
+    ofstream file;
+    file.open("out_calibration.txt");
+    file    << cameraMatrix.at<double>(0, 0) << " "     // fx
+            << cameraMatrix.at<double>(1, 1) << " "     // fy
+            << cameraMatrix.at<double>(0, 2) << " "     // cx
+            << cameraMatrix.at<double>(1, 2) << " "     // cy
+            << distCoeffs.at<double>(0) << " "          // k1
+            << distCoeffs.at<double>(1) << " "          // k2
+            << distCoeffs.at<double>(2) << " "          // p1
+            << distCoeffs.at<double>(3)                 // p2
+            << endl
+            << imageSize.width << " " << imageSize.height
+            << endl
+            << "crop"
+            << endl
+            << imageSize.width << " " << imageSize.height;
+    file.close();
+}
+
 bool runCalibrationAndSave(Settings& s, Size imageSize, Mat&  cameraMatrix, Mat& distCoeffs,vector<vector<Point2f> > imagePoints )
 {
     vector<Mat> rvecs, tvecs;
@@ -550,8 +572,10 @@ bool runCalibrationAndSave(Settings& s, Size imageSize, Mat&  cameraMatrix, Mat&
     cout << (ok ? "Calibration succeeded" : "Calibration failed")
         << ". avg re projection error = "  << totalAvgErr ;
 
-    if( ok )
+    if( ok ) {
         saveCameraParams( s, imageSize, cameraMatrix, distCoeffs, rvecs ,tvecs, reprojErrs,
                             imagePoints, totalAvgErr);
+        saveLSDCalibrationFile( imageSize, cameraMatrix, distCoeffs);
+    }
     return ok;
 }
