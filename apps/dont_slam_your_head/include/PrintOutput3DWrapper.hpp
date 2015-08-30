@@ -29,7 +29,7 @@ public:
 	/*virtual*/ void publishDebugInfo(Eigen::Matrix<float, 20, 1> data);
 
 private:
-	void printVector(Eigen::Vector3d const& vec);
+	void printPose(SE3 const& pose);
 };
 
 }

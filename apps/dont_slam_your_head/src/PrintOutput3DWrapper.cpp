@@ -13,13 +13,13 @@ PrintOutput3DWrapper::~PrintOutput3DWrapper() {};
 void PrintOutput3DWrapper::publishKeyframeGraph(KeyFrameGraph* graph) {};
 
 void PrintOutput3DWrapper::publishKeyframe(Frame* kf) {
-	std::cout << "publishKeyframe";
-	printVector(se3FromSim3(kf->getScaledCamToWorld()).translation());
+	std::cout << "publishKeyframe" << std::endl;
+	printPose(se3FromSim3(kf->getScaledCamToWorld()));
 };
 
 void PrintOutput3DWrapper::publishTrackedFrame(Frame* kf) {
-	std::cout << "publishTrackedFrame";
-	printVector(se3FromSim3(kf->getScaledCamToWorld()).translation());
+	std::cout << "publishTrackedFrame" << std::endl;
+	printPose(se3FromSim3(kf->getScaledCamToWorld()));
 };
 
 void PrintOutput3DWrapper::publishTrajectory(std::vector<Eigen::Matrix<float, 3, 1>> trajectory, std::string identifier) {
@@ -33,8 +33,13 @@ void PrintOutput3DWrapper::publishDebugInfo(Eigen::Matrix<float, 20, 1> data) {
 	std::cout << "PrintOutput3DWrapper::publishDebugInfo" << std::endl;
 };
 
-void PrintOutput3DWrapper::printVector(Eigen::Vector3d const& vec) {
-	std::cout << "(" << vec.x() << ", " <<  vec.y() << ", " << vec.z()
+void PrintOutput3DWrapper::printPose(SE3 const& pose) {
+	Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
+	Eigen::Vector3f trans = pose.translation().cast<float>();
+	std::cout << "  trans: ("
+		<< trans[0] << ", " << trans[1] << ", " << trans[2]
+		<< ")" << std::endl << "   rot: ("
+		<< quat.x() << ", " << quat.y() << ", " << quat.z() << ", " << quat.w()
 		<< ")" << std::endl;
 }
 
