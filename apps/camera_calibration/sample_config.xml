@@ -6,7 +6,7 @@
   <BoardSize_Height>5</BoardSize_Height>
 
   <!-- The size of a square in some user defined metric system (pixel, millimeter)-->
-  <Square_Size>0.75</Square_Size>
+  <Square_Size>0.075</Square_Size>
 
   <!-- The type of input used for camera calibration. One of: CHESSBOARD CIRCLES_GRID ASYMMETRIC_CIRCLES_GRID -->
   <Calibrate_Pattern>"CHESSBOARD"</Calibrate_Pattern>
@@ -21,7 +21,7 @@
   <Input_FlipAroundHorizontalAxis>0</Input_FlipAroundHorizontalAxis>
 
   <!-- Time delay between frames in case of camera. -->
-  <Input_Delay>100</Input_Delay>
+  <Input_Delay>2000</Input_Delay>
 
   <!-- How many frames to use, for calibration. -->
   <Calibrate_NrOfFrameToUse>25</Calibrate_NrOfFrameToUse>
