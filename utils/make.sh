@@ -5,14 +5,14 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd $DIR/..
 
 # no build directory, create it
-if [[ ! -d "build" ]]; then
+if [ ! -d "build" ]; then
     mkdir build
 fi
 
 cd build
 
 # no makefile in build dir, run cmake
-if [[ ! -f "Makefile" ]]; then
+if [ ! -f "Makefile" ]; then
   cmake ..
 fi
 

@@ -13,14 +13,14 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd $DIR/..
 
 # no build directory, create it
-if [[ ! -d "android-build" ]]; then
+if [ ! -d "android-build" ]; then
     mkdir android-build
 fi
 
 cd android-build
 
 # no makefile in build dir, run cmake
-if [[ ! -f "Makefile" ]]; then
+if [ ! -f "Makefile" ]; then
   cmake -DCMAKE_TOOLCHAIN_FILE=../utils/android-cmake/android.toolchain.cmake \
   	-DANDROID_NDK=${ANDROID_NDK} \
   	-DCMAKE_BUILD_TYPE=Release \
