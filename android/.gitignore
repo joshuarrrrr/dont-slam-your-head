@@ -7,3 +7,6 @@
 /captures
 
 app/src/main/obj/
+
+# ignore include folder as content is copied by cmake
+app/src/main/jni/include/
