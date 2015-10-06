@@ -31,3 +31,4 @@ fi
 
 # build it
 cmake --build .
+make install
