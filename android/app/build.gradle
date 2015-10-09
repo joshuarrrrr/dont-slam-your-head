@@ -1,32 +1,64 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.model.application'
 
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+model {
+    android {
+        compileSdkVersion = 23
+        buildToolsVersion = "23.0.1"
 
-    sourceSets.main {
-        jniLibs.srcDir 'src/main/libs' //set libs as .so's location instead of jniLibs
-        jni.srcDirs = [] //disable automatic ndk-build call with auto-generated Android.mk
-    }
-
-    defaultConfig {
-        applicationId "de.joshuareibert.dontslamyourhead"
-        minSdkVersion 21
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-        ndk {
-            moduleName "hello-jni"
+        defaultConfig.with {
+            applicationId = "de.joshuareibert.dontslamyourhead"
+            minSdkVersion.apiLevel = 4
+            targetSdkVersion.apiLevel = 23
         }
     }
-    buildTypes {
+
+    compileOptions.with {
+        sourceCompatibility=JavaVersion.VERSION_1_7
+        targetCompatibility=JavaVersion.VERSION_1_7
+    }
+
+    /*
+     * native build settings
+     */
+    android.ndk {
+        moduleName = "hello-jni"
+        stl = "stlport_static"
+        cppFlags += "-g"
+        cppFlags += "-std=c++11"
+        cppFlags += "-Wall"
+        cppFlags  += "-I${file("src/main/jni")}".toString()
+    }
+    android.buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled = true
+            proguardFiles  += file('proguard-rules.txt')
         }
     }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    android.productFlavors {
+        // for detailed abiFilter descriptions, refer to "Supported ABIs" @
+        // https://developer.android.com/ndk/guides/abis.html#sa
+        create("arm") {
+            ndk.abiFilters += "armeabi"
+        }
+        create("arm7") {
+            ndk.abiFilters += "armeabi-v7a"
+        }
+        create("arm8") {
+            ndk.abiFilters += "arm64-v8a"
+        }
+        create("x86") {
+            ndk.abiFilters += "x86"
+        }
+        create("x86-64") {
+            ndk.abiFilters += "x86_64"
+        }
+        create("mips") {
+            ndk.abiFilters += "mips"
+        }
+        create("mips-64") {
+            ndk.abiFilters += "mips64"
+        }
+        // To include all cpu architectures, leaves abiFilters empty
+        create("all")
+    }
 }
