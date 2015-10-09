@@ -21,12 +21,15 @@ model {
      * native build settings
      */
     android.ndk {
-        moduleName = "hello-jni"
-        stl = "stlport_static"
+        moduleName = "lsd-slam"
+        stl = "gnustl_static"
         cppFlags += "-g"
+        cppFlags += "-fexceptions"
         cppFlags += "-std=c++11"
-        cppFlags += "-Wall"
+        cppFlags += "-DANDROID"
         cppFlags  += "-I${file("src/main/jni")}".toString()
+        cppFlags  += "-I${file("src/main/jni/lsd_slam")}".toString()
+        cppFlags  += "-I/usr/include/eigen3"
     }
     android.buildTypes {
         release {
