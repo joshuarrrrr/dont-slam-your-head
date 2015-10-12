@@ -25,10 +25,12 @@ model {
         stl = "gnustl_static"
         cppFlags += "-g"
         cppFlags += "-fexceptions"
+        cppFlags += "-frtti"
         cppFlags += "-std=c++11"
         cppFlags += "-DANDROID"
         cppFlags  += "-I${file("src/main/jni")}".toString()
         cppFlags  += "-I${file("src/main/jni/lsd_slam")}".toString()
+        cppFlags  += "-I/home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include"
         cppFlags  += "-I/usr/include/eigen3"
     }
     android.buildTypes {
