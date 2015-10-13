@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def ndkDir = properties.getProperty('ndk.dir')
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -47,6 +51,15 @@ android {
             }
         }
         fat
+    }
+
+    // call regular ndk-build(.cmd) script from app directory
+    task ndkBuild(type: Exec) {
+        commandLine "$ndkDir/ndk-build", '-C', file('src/main').absolutePath
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
     }
 }
 
