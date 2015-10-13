@@ -16,7 +16,7 @@
  */
 #include <string.h>
 #include <jni.h>
-#include "test.hpp"
+#include "lsd-slam/test.hpp"
 #include <string>
 
 /* This is a trivial JNI example where we use a native method
@@ -30,7 +30,7 @@ jstring
 Java_de_joshuareibert_dontslamyourhead_MainActivity_stringFromJNI(JNIEnv* env,
                                                  jobject thiz) {
 
-    std::string test = cow();
+    std::string test = helloFromLSDSLAM();
 
     return env->NewStringUTF(test.c_str());
 }

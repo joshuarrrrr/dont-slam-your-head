@@ -1,4 +1,4 @@
 
 #include <string>
 
-std::string const cow();
+std::string const helloFromLSDSLAM();

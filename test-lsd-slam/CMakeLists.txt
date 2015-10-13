@@ -11,5 +11,5 @@ install(
 	)
 install(
 	FILES "test.hpp"
-	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/include
+	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lsd-slam
 	)

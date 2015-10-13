@@ -1,6 +1,6 @@
 
 #include "test.hpp"
 
-std::string const cow() {
-	return "muh";
+std::string const helloFromLSDSLAM() {
+	return "hello from liblsd-slam.so!";
 }
