@@ -30,9 +30,8 @@ jstring
 Java_de_joshuareibert_dontslamyourhead_MainActivity_stringFromJNI(JNIEnv* env,
                                                  jobject thiz) {
 
-    std::string test("TestTestTest");
+    std::string test = cow();
 
     return env->NewStringUTF(test.c_str());
-    //return env->NewStringUTF("TestTestTest");
 }
 }
