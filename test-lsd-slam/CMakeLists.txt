@@ -6,8 +6,8 @@ ADD_LIBRARY(lsd-slam SHARED "test.cpp")
 
 install(
 	TARGETS lsd-slam
-	LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni
-	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni
+	LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
+	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
 	)
 install(
 	FILES "test.hpp"
