@@ -1,7 +1,21 @@
-FILE(GLOB_RECURSE LSD_SOURCES "*/*.cpp")
-LIST(APPEND LSD_SOURCES
-	"LiveSLAMWrapper.cpp"
-	"SlamSystem.cpp"
+#FILE(GLOB_RECURSE LSD_SOURCES "*/*.cpp")
+#LIST(APPEND LSD_SOURCES
+#	"LiveSLAMWrapper.cpp"
+#	"SlamSystem.cpp"
+#	)
+
+SET(LSD_SOURCES
+	DataStructures/Frame.cpp
+	DataStructures/FrameMemory.cpp
+	DataStructures/FramePoseStruct.cpp
+	Tracking/TrackingReference.cpp
+	util/settings.cpp
+	)
+
+FILE(GLOB_RECURSE LSD_HEADERS "*.h")
+
+FILE(GLOB_RECURSE Boost_LIBRARIES
+	"/home/joshua/git/Boost-for-Android/build/lib/*.a"
 	)
 
 ADD_LIBRARY(lsdslam SHARED ${LSD_SOURCES})
@@ -17,4 +31,22 @@ TARGET_LINK_LIBRARIES(lsdslam
 	${G2O_TYPES_SIM3}
 	${Boost_LIBRARIES}
 	${OpenCV_LIBS}
+	)
+
+install(
+	TARGETS lsdslam
+	LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
+	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
+	)
+
+install(
+	DIRECTORY ${PROJECT_SOURCE_DIR}/lsd_slam
+	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni
+	FILES_MATCHING PATTERN "*.h"
+	)
+
+install(
+	DIRECTORY ${PROJECT_SOURCE_DIR}/thirdparty/Sophus/sophus
+	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni
+	FILES_MATCHING PATTERN "*.hpp"
 	)
