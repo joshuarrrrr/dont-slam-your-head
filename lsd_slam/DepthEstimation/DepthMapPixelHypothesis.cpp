@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ namespace lsd_slam
 {
 
 
-cv::Vec3b DepthMapPixelHypothesis::getVisualizationColor(int lastFrameID) const
+/*cv::Vec3b DepthMapPixelHypothesis::getVisualizationColor(int lastFrameID) const
 {
 	if(debugDisplay == 0 || debugDisplay == 1)
 	{
@@ -87,6 +87,6 @@ cv::Vec3b DepthMapPixelHypothesis::getVisualizationColor(int lastFrameID) const
 	}
 
 	return cv::Vec3b(255,255,255);
-}
+}*/
 
 }

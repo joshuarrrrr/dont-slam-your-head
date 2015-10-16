@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 */
 
 #pragma once
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/core/core.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
 
 
 
@@ -30,26 +30,27 @@ namespace lsd_slam
 namespace Util
 {
 
-	struct DisplayImageObect
+	/*struct DisplayImageObect
 	{
 		cv::Mat img;
 		std::string name;
 		bool autoSize;
-	};
+	};*/
 
 
 /// Image display function working on different platforms.
 /// On Android, the window name is ignored as all images are output fullscreen.
-void displayImage(const char* windowName, const cv::Mat& image, bool autoSize = true);
+//void displayImage(const char* windowName, const cv::Mat& image, bool autoSize = true);
 
 /// Convenience function which internally converts the image to a cv::Mat
 inline void displayImage(const char* windowName, const float* image, int width, int height)
 {
-	cv::Mat floatWrapper(height, width, CV_32F, const_cast<float*>(image));
+	/*cv::Mat floatWrapper(height, width, CV_32F, const_cast<float*>(image));
 	cv::Mat tempImage(height, width, CV_8UC1);
 	floatWrapper.convertTo(tempImage, CV_8UC1);
 	cv::cvtColor(tempImage, tempImage, CV_GRAY2RGB);
-	displayImage(windowName, tempImage);
+	displayImage(windowName, tempImage);*/
+	// TODO
 }
 
 /// Waits for key input at most the given amount of milliseconds and returns the keycode.

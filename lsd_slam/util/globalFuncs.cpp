@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 
 #include "util/globalFuncs.h"
 #include "util/SophusUtil.h"
-#include "opencv2/opencv.hpp"
+//#include "opencv2/opencv.hpp"
 #include "DataStructures/Frame.h"
 
 namespace lsd_slam
 {
 
 
-SE3 SE3CV2Sophus(const cv::Mat &R, const cv::Mat &t)
+/*SE3 SE3CV2Sophus(const cv::Mat &R, const cv::Mat &t)
 {
 	Sophus::Matrix3f sR;
 	Sophus::Vector3f st;
@@ -41,9 +41,9 @@ SE3 SE3CV2Sophus(const cv::Mat &R, const cv::Mat &t)
 	}
 
 	return SE3(toSophus(sR.inverse()), toSophus(st));
-}
+}*/
 
-void printMessageOnCVImage(cv::Mat &image, std::string line1,std::string line2)
+/*void printMessageOnCVImage(cv::Mat &image, std::string line1,std::string line2)
 {
 	for(int x=0;x<image.cols;x++)
 		for(int y=image.rows-30; y<image.rows;y++)
@@ -54,16 +54,16 @@ void printMessageOnCVImage(cv::Mat &image, std::string line1,std::string line2)
 
 	cv::putText(image, line1, cvPoint(10,image.rows-18),
 	    CV_FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(200,200,250), 1, 8);
-}
+}*/
 
 
-cv::Mat getDepthRainbowPlot(Frame* kf, int lvl)
+/*cv::Mat getDepthRainbowPlot(Frame* kf, int lvl)
 {
 	return getDepthRainbowPlot(kf->idepth(lvl), kf->idepthVar(lvl), kf->image(lvl),
 			kf->width(lvl), kf->height(lvl));
-}
+}*/
 
-cv::Mat getDepthRainbowPlot(const float* idepth, const float* idepthVar, const float* gray, int width, int height)
+/*cv::Mat getDepthRainbowPlot(const float* idepth, const float* idepthVar, const float* gray, int width, int height)
 {
 	cv::Mat res = cv::Mat(height,width,CV_8UC3);
 	if(gray != 0)
@@ -97,8 +97,8 @@ cv::Mat getDepthRainbowPlot(const float* idepth, const float* idepthVar, const f
 			}
 		}
 	return res;
-}
-cv::Mat getVarRedGreenPlot(const float* idepthVar, const float* gray, int width, int height)
+}*/
+/*cv::Mat getVarRedGreenPlot(const float* idepthVar, const float* gray, int width, int height)
 {
 	float* idepthVarExt = (float*)Eigen::internal::aligned_malloc(width*height*sizeof(float));
 
@@ -161,5 +161,5 @@ cv::Mat getVarRedGreenPlot(const float* idepthVar, const float* gray, int width,
 	Eigen::internal::aligned_free((void*)idepthVarExt);
 
 	return res;
-}
+}*/
 }

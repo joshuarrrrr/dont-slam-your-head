@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -89,8 +89,8 @@ void LiveSLAMWrapper::Loop()
 			notifyCondition.wait(waitLock);
 		}
 		waitLock.unlock();
-		
-		
+
+
 		if(fullResetRequested)
 		{
 			resetAll();
@@ -98,18 +98,18 @@ void LiveSLAMWrapper::Loop()
 			if (!(imageStream->getBuffer()->size() > 0))
 				continue;
 		}
-		
-		TimestampedMat image = imageStream->getBuffer()->first();
+
+		//TimestampedMat image = imageStream->getBuffer()->first();
 		imageStream->getBuffer()->popFront();
-		
+
 		// process image
 		//Util::displayImage("MyVideo", image.data);
-		newImageCallback(image.data, image.timestamp);
+		//newImageCallback(image.data, image.timestamp);
 	}
 }
 
 
-void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
+/*void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
 {
 	++ imageSeqNumber;
 
@@ -119,7 +119,7 @@ void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
 		grayImg = img;
 	else
 		cvtColor(img, grayImg, CV_RGB2GRAY);
-	
+
 
 	// Assert that we work with 8 bit images
 	assert(grayImg.elemSize() == 1);
@@ -136,7 +136,7 @@ void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
 	{
 		monoOdometry->trackFrame(grayImg.data,imageSeqNumber,false,imgTime.toSec());
 	}
-}
+}*/
 
 void LiveSLAMWrapper::logCameraPose(const SE3& camToWorld, double time)
 {
@@ -182,7 +182,7 @@ void LiveSLAMWrapper::resetAll()
 	imageSeqNumber = 0;
 	isInitialized = false;
 
-	Util::closeAllWindows();
+	//Util::closeAllWindows();
 
 }
 
