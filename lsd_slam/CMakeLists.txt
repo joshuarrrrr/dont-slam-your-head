@@ -18,8 +18,8 @@ FILE(GLOB_RECURSE Boost_LIBRARIES
 	"/home/joshua/git/Boost-for-Android/build/lib/*.a"
 	)
 
-ADD_LIBRARY(lsdslam SHARED ${LSD_SOURCES})
-TARGET_LINK_LIBRARIES(lsdslam
+ADD_LIBRARY(lsd_slam SHARED ${LSD_SOURCES})
+TARGET_LINK_LIBRARIES(lsd_slam
 	${FABMAP_LIB}
 	${CSPARSE_LIBRARY}
 	${G2O_CORE_LIBRARY}
@@ -34,7 +34,7 @@ TARGET_LINK_LIBRARIES(lsdslam
 	)
 
 install(
-	TARGETS lsdslam
+	TARGETS lsd_slam
 	LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
 	DESTINATION ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/lib
 	)
