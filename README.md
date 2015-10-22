@@ -14,8 +14,5 @@ collected with the smartphone's camera and the virtual environment is developed.
 - [Boost](http://www.boost.org/) (system, thread, program_options)
 - [CMake](http://www.cmake.org/)
 
-## building on linux
-use the included script `./utils/make.sh`
-
 ## building for android
 follow the instructions in the [wiki](https://github.com/mmbuw/dont-slam-your-head/wiki/android#building-lsd-slam-for-android)
