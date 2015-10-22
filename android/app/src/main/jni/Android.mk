@@ -2,10 +2,10 @@ LOCAL_PATH := $(call my-dir)
 
 
 include $(CLEAR_VARS)
-include $(LOCAL_PATH)/g2o.mk
+include $(LOCAL_PATH)/g2o/Android.mk
 
 include $(CLEAR_VARS)
-include $(LOCAL_PATH)/boost.mk
+include $(LOCAL_PATH)/boost/Android.mk
 
 
 include $(CLEAR_VARS)
