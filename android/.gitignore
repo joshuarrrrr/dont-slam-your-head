@@ -12,4 +12,5 @@ app/src/main/obj/
 app/src/main/jni/boost
 app/src/main/jni/lsd_slam
 app/src/main/jni/sophus
+app/src/main/jni/g2o
 
