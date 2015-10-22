@@ -4,17 +4,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/g2o.mk
 
-
 include $(CLEAR_VARS)
-LOCAL_MODULE := boost_thread
-LOCAL_SRC_FILES := /home/joshua/git/dont-slam-your-head/android/app/src/main/jni/boost/lib/libboost_thread-gcc-mt-1_53.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := boost_system
-LOCAL_SRC_FILES := /home/joshua/git/dont-slam-your-head/android/app/src/main/jni/boost/lib/libboost_system-gcc-mt-1_53.a
-include $(PREBUILT_STATIC_LIBRARY)
+include $(LOCAL_PATH)/boost.mk
 
 
 include $(CLEAR_VARS)
