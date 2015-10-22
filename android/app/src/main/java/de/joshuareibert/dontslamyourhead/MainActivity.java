@@ -42,6 +42,6 @@ public class MainActivity extends Activity {
     public native String stringFromJNI();
 
     static {
-        System.loadLibrary("hello-jni");
+        System.loadLibrary("lsd-jni");
     }
 }

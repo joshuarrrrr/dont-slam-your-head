@@ -68,8 +68,8 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_MODULE    := hello-jni
-LOCAL_SRC_FILES := hello-jni.cpp
+LOCAL_MODULE    := lsd-jni
+LOCAL_SRC_FILES := lsd-jni.cpp
 LOCAL_CPPFLAGS += -std=c++11
 LOCAL_C_INCLUDES += /usr/include/eigen3
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/lsd_slam
