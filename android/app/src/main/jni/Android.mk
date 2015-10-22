@@ -29,7 +29,7 @@ LOCAL_SRC_FILES := lsd-jni.cpp
 LOCAL_CPPFLAGS += -std=c++11
 LOCAL_C_INCLUDES += /usr/include/eigen3
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/lsd_slam
-LOCAL_C_INCLUDES += /home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/g2o/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/boost/include/
 LOCAL_STATIC_LIBRARIES := boost_system boost_thread
 LOCAL_SHARED_LIBRARIES := lsd_slam
