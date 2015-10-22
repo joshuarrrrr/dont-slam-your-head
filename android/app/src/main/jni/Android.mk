@@ -1,18 +1,15 @@
 LOCAL_PATH := $(call my-dir)
 
-
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/g2o/Android.mk
 
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/boost/Android.mk
 
-
 include $(CLEAR_VARS)
 LOCAL_MODULE := lsd_slam
 LOCAL_SRC_FILES := lib/liblsd_slam.so
 include $(PREBUILT_SHARED_LIBRARY)
-
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := lsd-jni
