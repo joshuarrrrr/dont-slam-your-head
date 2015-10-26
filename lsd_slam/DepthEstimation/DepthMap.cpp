@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam>
+* For more information see <http://vision.in.tum.de/lsdslam> 
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
-//#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "util/settings.h"
 #include "DepthEstimation/DepthMapPixelHypothesis.h"
@@ -53,10 +53,10 @@ DepthMap::DepthMap(int w, int h, const Eigen::Matrix3f& K)
 
 
 
-	/*debugImageHypothesisHandling = cv::Mat(h,w, CV_8UC3);
+	debugImageHypothesisHandling = cv::Mat(h,w, CV_8UC3);
 	debugImageHypothesisPropagation = cv::Mat(h,w, CV_8UC3);
 	debugImageStereoLines = cv::Mat(h,w, CV_8UC3);
-	debugImageDepth = cv::Mat(h,w, CV_8UC3);*/
+	debugImageDepth = cv::Mat(h,w, CV_8UC3);
 
 
 	this->K = K;
@@ -87,10 +87,10 @@ DepthMap::~DepthMap()
 	if(activeKeyFrame != 0)
 		activeKeyFramelock.unlock();
 
-	/*debugImageHypothesisHandling.release();
+	debugImageHypothesisHandling.release();
 	debugImageHypothesisPropagation.release();
 	debugImageStereoLines.release();
-	debugImageDepth.release();*/
+	debugImageDepth.release();
 
 	delete[] otherDepthMap;
 	delete[] currentDepthMap;
@@ -245,8 +245,8 @@ bool DepthMap::observeDepthCreate(const int &x, const int &y, const int &idx, Ru
 		bool* wasGoodDuringTracking = refFrame->refPixelWasGoodNoCreate();
 		if(wasGoodDuringTracking != 0 && !wasGoodDuringTracking[(x >> SE3TRACKING_MIN_LEVEL) + (width >> SE3TRACKING_MIN_LEVEL)*(y >> SE3TRACKING_MIN_LEVEL)])
 		{
-			//if(plotStereoImages)
-			//	debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,0); // BLUE for SKIPPED NOT GOOD TRACKED
+			if(plotStereoImages)
+				debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,0); // BLUE for SKIPPED NOT GOOD TRACKED
 			return false;
 		}
 	}
@@ -274,7 +274,7 @@ bool DepthMap::observeDepthCreate(const int &x, const int &y, const int &idx, Ru
 
 	if(error < 0 || result_var > MAX_VAR)
 		return false;
-
+	
 	result_idepth = UNZERO(result_idepth);
 
 	// add hypothesis
@@ -283,11 +283,11 @@ bool DepthMap::observeDepthCreate(const int &x, const int &y, const int &idx, Ru
 			result_var,
 			VALIDITY_COUNTER_INITIAL_OBSERVE);
 
-	/*if(plotStereoImages)
-		debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,255,255); // white for GOT CREATED*/
+	if(plotStereoImages)
+		debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,255,255); // white for GOT CREATED
 
 	if(enablePrintDebugInfo) stats->num_observe_created++;
-
+	
 	return true;
 }
 
@@ -301,8 +301,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 	{
 		if((int)target->nextStereoFrameMinID - referenceFrameByID_offset >= (int)referenceFrameByID.size())
 		{
-			/*if(plotStereoImages)
-				debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,255,0);	// GREEN FOR skip*/
+			if(plotStereoImages)
+				debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,255,0);	// GREEN FOR skip
 
 			if(enablePrintDebugInfo) stats->num_observe_skip_alreadyGood++;
 			return false;
@@ -322,8 +322,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 		bool* wasGoodDuringTracking = refFrame->refPixelWasGoodNoCreate();
 		if(wasGoodDuringTracking != 0 && !wasGoodDuringTracking[(x >> SE3TRACKING_MIN_LEVEL) + (width >> SE3TRACKING_MIN_LEVEL)*(y >> SE3TRACKING_MIN_LEVEL)])
 		{
-			/*if(plotStereoImages)
-				debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,0); // BLUE for SKIPPED NOT GOOD TRACKED*/
+			if(plotStereoImages)
+				debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,0); // BLUE for SKIPPED NOT GOOD TRACKED
 			return false;
 		}
 	}
@@ -358,8 +358,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 		// do nothing, pixel got oob, but is still in bounds in original. I will want to try again.
 		if(enablePrintDebugInfo) stats->num_observe_skip_oob++;
 
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,255);	// RED FOR OOB*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,255);	// RED FOR OOB
 		return false;
 	}
 
@@ -368,8 +368,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 	{
 		if(enablePrintDebugInfo) stats->num_observe_skip_fail++;
 
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,255);	// PURPLE FOR NON-GOOD*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,0,255);	// PURPLE FOR NON-GOOD
 
 
 		target->validity_counter -= VALIDITY_COUNTER_DEC;
@@ -391,8 +391,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 	else if(error == -3)
 	{
 		if(enablePrintDebugInfo) stats->num_observe_notfound++;
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,0);	// BLACK FOR big not-found*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,0);	// BLACK FOR big not-found
 
 
 		return false;
@@ -400,8 +400,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 
 	else if(error == -4)
 	{
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,0);	// BLACK FOR big arithmetic error*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,0,0);	// BLACK FOR big arithmetic error
 
 		return false;
 	}
@@ -410,8 +410,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 	else if(DIFF_FAC_OBSERVE*diff*diff > result_var + target->idepth_var_smoothed)
 	{
 		if(enablePrintDebugInfo) stats->num_observe_inconsistent++;
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,255,0);	// Turkoise FOR big inconsistent*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,255,0);	// Turkoise FOR big inconsistent
 
 		target->idepth_var *= FAIL_VAR_INC_FAC;
 		if(target->idepth_var > MAX_VAR) target->isValid = false;
@@ -465,8 +465,8 @@ bool DepthMap::observeDepthUpdate(const int &x, const int &y, const int &idx, co
 			target->nextStereoFrameMinID = refFrame->id() + inc;
 		}
 
-		/*if(plotStereoImages)
-			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,255,255); // yellow for GOT UPDATED*/
+		if(plotStereoImages)
+			debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(0,255,255); // yellow for GOT UPDATED
 
 		return true;
 	}
@@ -775,7 +775,7 @@ template<bool removeOcclusions> void DepthMap::regularizeDepthMapRow(int validit
 
 			if(!destRead->isValid)
 				continue;
-
+			
 			float sum=0, val_sum=0, sumIvar=0;//, min_varObs = 1e20;
 			int numOccluding = 0, numNotOccluding = 0;
 
@@ -836,7 +836,7 @@ template<bool removeOcclusions> void DepthMap::regularizeDepthMapRow(int validit
 
 			sum = sum / sumIvar;
 			sum = UNZERO(sum);
-
+			
 
 			// update!
 			dest->idepth_smoothed = sum;
@@ -988,14 +988,14 @@ void DepthMap::initializeFromGTDepth(Frame* new_frame)
 			}
 		}
 	}
-
+	
 
 	for(int y=0;y<height;y++)
 	{
 		for(int x=0;x<width;x++)
 		{
 			float idepthValue = idepth[x+y*width];
-
+			
 			if(!isnanf(idepthValue) && idepthValue > 0)
 			{
 				currentDepthMap[x+y*width] = DepthMapPixelHypothesis(
@@ -1106,8 +1106,8 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 
 	resetCounters();
 
-
-	/*if(plotStereoImages)
+	
+	if(plotStereoImages)
 	{
 		cv::Mat keyFrameImage(activeKeyFrame->height(), activeKeyFrame->width(), CV_32F, const_cast<float*>(activeKeyFrameImageData));
 		keyFrameImage.convertTo(debugImageHypothesisHandling, CV_8UC1);
@@ -1118,7 +1118,7 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 		cv::Mat rfimg = 0.5f*oldest_refImage + 0.5f*newest_refImage;
 		rfimg.convertTo(debugImageStereoLines, CV_8UC1);
 		cv::cvtColor(debugImageStereoLines, debugImageStereoLines, CV_GRAY2RGB);
-	}*/
+	}
 
 	struct timeval tv_start, tv_end;
 
@@ -1145,7 +1145,7 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 	msRegularize = 0.9*msRegularize + 0.1*((tv_end.tv_sec-tv_start.tv_sec)*1000.0f + (tv_end.tv_usec-tv_start.tv_usec)/1000.0f);
 	nRegularize++;
 
-
+	
 	// Update depth in keyframe
 	if(!activeKeyFrame->depthHasBeenUpdatedFlag)
 	{
@@ -1166,11 +1166,11 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 	activeKeyFrame->numMappedOnThisTotal++;
 
 
-	/*if(plotStereoImages)
+	if(plotStereoImages)
 	{
 		Util::displayImage( "Stereo Key Frame", debugImageHypothesisHandling, false );
 		Util::displayImage( "Stereo Reference Frame", debugImageStereoLines, false );
-	}*/
+	}
 
 
 
@@ -1234,12 +1234,12 @@ void DepthMap::createKeyFrame(Frame* new_keyframe)
 
 	resetCounters();
 
-	/*if(plotStereoImages)
+	if(plotStereoImages)
 	{
 		cv::Mat keyFrameImage(new_keyframe->height(), new_keyframe->width(), CV_32F, const_cast<float*>(new_keyframe->image(0)));
 		keyFrameImage.convertTo(debugImageHypothesisPropagation, CV_8UC1);
 		cv::cvtColor(debugImageHypothesisPropagation, debugImageHypothesisPropagation, CV_GRAY2RGB);
-	}*/
+	}
 
 
 
@@ -1401,7 +1401,7 @@ int DepthMap::debugPlotDepthMap()
 {
 	if(activeKeyFrame == 0) return 1;
 
-	/*cv::Mat keyFrameImage(activeKeyFrame->height(), activeKeyFrame->width(), CV_32F, const_cast<float*>(activeKeyFrameImageData));
+	cv::Mat keyFrameImage(activeKeyFrame->height(), activeKeyFrame->width(), CV_32F, const_cast<float*>(activeKeyFrameImageData));
 	keyFrameImage.convertTo(debugImageDepth, CV_8UC1);
 	cv::cvtColor(debugImageDepth, debugImageDepth, CV_GRAY2RGB);
 
@@ -1421,7 +1421,7 @@ int DepthMap::debugPlotDepthMap()
 
 			cv::Vec3b color = currentDepthMap[idx].getVisualizationColor(refID);
 			debugImageDepth.at<cv::Vec3b>(y,x) = color;
-		}*/
+		}
 
 
 	return 1;
@@ -1929,7 +1929,7 @@ inline float DepthMap::doLineStereo(
 	// geometric and photometric error.
 	result_var = alpha*alpha*((didSubpixel ? 0.05f : 0.5f)*sampleDist*sampleDist +  geoDispError + photoDispError);	// square to make variance
 
-	/*if(plotStereoImages)
+	if(plotStereoImages)
 	{
 		if(rand()%5==0)
 		{
@@ -1953,14 +1953,16 @@ inline float DepthMap::doLineStereo(
 			cv::Scalar color = cv::Scalar(255*fac, 255-255*fac, 0);// bw
 
 
-			//if(rescaleFactor > 1)
-			//	color = cv::Scalar(500*(rescaleFactor-1),0,0);
-			//else
-			//	color = cv::Scalar(0,500*(1-rescaleFactor),500*(1-rescaleFactor));
+			/*
+			if(rescaleFactor > 1)
+				color = cv::Scalar(500*(rescaleFactor-1),0,0);
+			else
+				color = cv::Scalar(0,500*(1-rescaleFactor),500*(1-rescaleFactor));
+			*/
 
 			cv::line(debugImageStereoLines,cv::Point2f(pClose[0], pClose[1]),cv::Point2f(pFar[0], pFar[1]),color,1,8,0);
 		}
-	}*/
+	}
 
 	result_idepth = idnew_best_match;
 

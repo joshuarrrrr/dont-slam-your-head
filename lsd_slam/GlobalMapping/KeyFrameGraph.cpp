@@ -36,7 +36,7 @@
 #include <g2o/core/estimate_propagator.h>
 #include <g2o/core/sparse_optimizer_terminate_action.h>
 
-//#include "opencv2/opencv.hpp"
+#include "opencv2/opencv.hpp"
 
 #include <g2o/types/sim3/sim3.h>
 #include "GlobalMapping/g2oTypeSim3Sophus.h"
@@ -121,7 +121,7 @@ void KeyFrameGraph::addFrame(Frame* frame)
 
 void KeyFrameGraph::dumpMap(std::string folder)
 {
-	/*printf("DUMP MAP: dumping to %s\n", folder.c_str());
+	printf("DUMP MAP: dumping to %s\n", folder.c_str());
 
 	keyframesAllMutex.lock_shared();
 	char buf[100];
@@ -230,7 +230,7 @@ void KeyFrameGraph::dumpMap(std::string folder)
 	fle << usedPixels;
 	fle.close();
 
-	printf("DUMP MAP: dumped %d edges\n", (int)edgesAll.size());*/
+	printf("DUMP MAP: dumped %d edges\n", (int)edgesAll.size());
 }
 
 

@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam>
+* For more information see <http://vision.in.tum.de/lsdslam> 
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 */
 
 #pragma once
-//#include <opencv2/core/core.hpp>
+#include <opencv2/core/core.hpp>
 #include "util/settings.h"
 #include "util/EigenCoreInclude.h"
 
@@ -30,7 +30,7 @@ namespace lsd_slam
 class KeyFrameGraph;
 
 /** Depth hypothesis used in DepthMap.
- *
+ *  
  *  Inverse depths need to be scaled with the DepthMap's internalScaleFactor to
  *  get frame scale. (From that, scale with the current keyframe's scale to
  *  get the current best estimate of absolute scale). */
@@ -90,7 +90,7 @@ public:
 			idepth_smoothed(-1),
 			idepth_var_smoothed(-1) {};
 
-	//cv::Vec3b getVisualizationColor(int lastFrameID) const;
+	cv::Vec3b getVisualizationColor(int lastFrameID) const;
 };
 
 }
