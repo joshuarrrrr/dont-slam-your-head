@@ -1,12 +1,21 @@
 package de.joshuareibert.dontslamyourhead;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener;
+import org.opencv.core.Mat;
+
+public class MainActivity extends Activity implements CvCameraViewListener {
+
+    private CameraBridgeViewBase mOpenCvCameraView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,6 +24,11 @@ public class MainActivity extends Activity {
 
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText(stringFromJNI());
+
+        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
+        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setCvCameraViewListener(this);
+        mOpenCvCameraView.enableView();
     }
 
     @Override
@@ -43,5 +57,29 @@ public class MainActivity extends Activity {
 
     static {
         System.loadLibrary("lsd-jni");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
+    }
+
+    public void onCameraViewStarted(int width, int height) {
+    }
+
+    public void onCameraViewStopped() {
+    }
+
+    @Override
+    public Mat onCameraFrame(Mat inputFrame) {
+        return inputFrame;
     }
 }
