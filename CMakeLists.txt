@@ -11,11 +11,14 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x") # ${SSE_FLAGS} -march=native")
+set(G2O_ROOT ${PROJECT_SOURCE_DIR}/android/app/src/main/jni/g2o)
 
 FIND_PACKAGE(Eigen3 REQUIRED)
-FIND_PACKAGE(G2O REQUIRED)
+#FIND_PACKAGE(G2O REQUIRED)
 #FIND_PACKAGE(SuiteParse REQUIRED) # Apparently needed by g2o
 #FIND_PACKAGE(OpenCV REQUIRED)
+
+include(${PROJECT_SOURCE_DIR}/android/app/src/main/jni/opencv/sdk/native/jni/OpenCVConfig.cmake)
 
 #SET(Boost_USE_STATIC_LIBS OFF)
 #SET(Boost_USE_MULTITHREADED ON)
@@ -28,11 +31,14 @@ INCLUDE_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/lsd_slam/
 	${PROJECT_SOURCE_DIR}/thirdparty/Sophus
 	/home/joshua/git/Boost-for-Android/build/include/boost-1_53
+	${PROJECT_SOURCE_DIR}/android/app/src/main/jni/opencv/sdk/native/jni/include
+	${PROJECT_SOURCE_DIR}/android/app/src/main/jni/g2o/include
+	${PROJECT_SOURCE_DIR}/android/app/src/main/jni/g2o/include/EXTERNAL/csparse
 #	${CSPARSE_INCLUDE_DIR} #Has been set by SuiteParse
 #	${CHOLMOD_INCLUDE_DIR} #Has been set by SuiteParse
 #	${OpenCV_INCLUDE_DIRS}
-	/home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include
-	/home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include/EXTERNAL/csparse
+#	/home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include
+#	/home/joshua/Android/android-ndk-r10d/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/user/include/EXTERNAL/csparse
 )
 
 ADD_SUBDIRECTORY(lsd_slam)
