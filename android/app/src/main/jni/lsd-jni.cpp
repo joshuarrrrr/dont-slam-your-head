@@ -1,6 +1,8 @@
 
 #include <string.h>
 #include <jni.h>
+#include <lsd_slam/IOWrapper/OpenCV/InputImageStream_OpenCV.h>
+#include <lsd_slam/IOWrapper/PrintOutput3DWrapper.h>
 #include <lsd_slam/LiveSLAMWrapper.h>
 #include <lsd_slam/DataStructures/Frame.h>
 #include <Eigen/Dense>
@@ -19,7 +21,9 @@ extern "C" {
 jstring
 Java_de_joshuareibert_dontslamyourhead_MainActivity_stringFromJNI(JNIEnv* env,
                                                  jobject thiz) {
-    lsd_slam::LiveSLAMWrapper slam(nullptr, nullptr);
+    lsd_slam::OpenCVInputImageStream* inputImageStream = new lsd_slam::OpenCVInputImageStream();
+    lsd_slam::PrintOutput3DWrapper* outputWrapper = new lsd_slam::PrintOutput3DWrapper();
+    lsd_slam::LiveSLAMWrapper slam(inputImageStream, outputWrapper);
     std::string txt = "Yay! It works.";
 
     const unsigned char* image = new unsigned char();
