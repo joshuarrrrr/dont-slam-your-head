@@ -1,4 +1,4 @@
-#include <PrintOutput3DWrapper.hpp>
+#include <IOWrapper/PrintOutput3DWrapper.h>
 
 #include "DataStructures/Frame.h"
 #include "GlobalMapping/KeyFrameGraph.h"

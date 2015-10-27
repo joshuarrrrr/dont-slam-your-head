@@ -1,4 +1,4 @@
-#include <OpenCVInputImageStream.hpp>
+#include <IOWrapper/OpenCV/InputImageStream_OpenCV.h>
 
 namespace lsd_slam
 {
