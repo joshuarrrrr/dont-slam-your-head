@@ -20,18 +20,42 @@ public class MainActivity extends Activity implements CvCameraViewListener {
     private CameraBridgeViewBase mOpenCvCameraView;
     private final int mCameraPermissionRequestCode = 0;
 
+    static {
+        System.loadLibrary("lsd-jni");
+    }
+
+    // native functions
+    public native String stringFromJNI();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     mCameraPermissionRequestCode);
-        }
+        } else
+            initCameraView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
     }
 
     @Override
@@ -56,25 +80,6 @@ public class MainActivity extends Activity implements CvCameraViewListener {
         return super.onOptionsItemSelected(item);
     }
 
-    public native String stringFromJNI();
-
-    static {
-        System.loadLibrary("lsd-jni");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -83,15 +88,12 @@ public class MainActivity extends Activity implements CvCameraViewListener {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
-                    mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-                    mOpenCvCameraView.setCvCameraViewListener(this);
-                    mOpenCvCameraView.enableView();
+                    initCameraView();
                 } else {
                     Toast.makeText(this, R.string.camera_permission_denied_msg, Toast.LENGTH_LONG).show();
                     this.finish();
                 }
-                return;
+                break;
             }
         }
     }
@@ -105,5 +107,14 @@ public class MainActivity extends Activity implements CvCameraViewListener {
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
         return inputFrame;
+    }
+
+    private void initCameraView() {
+        if (mOpenCvCameraView == null) {
+            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
+            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+            mOpenCvCameraView.setCvCameraViewListener(this);
+        }
+        mOpenCvCameraView.enableView();
     }
 }
