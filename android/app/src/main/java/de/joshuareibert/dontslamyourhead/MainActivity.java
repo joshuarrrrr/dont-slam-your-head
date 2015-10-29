@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener;
@@ -17,7 +18,7 @@ import org.opencv.core.Mat;
 public class MainActivity extends Activity implements CvCameraViewListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
-    private int mCameraPermissionRequestCode;
+    private final int mCameraPermissionRequestCode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,6 @@ public class MainActivity extends Activity implements CvCameraViewListener {
                     new String[]{Manifest.permission.CAMERA},
                     mCameraPermissionRequestCode);
         }
-        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.enableView();
     }
 
     @Override
@@ -76,6 +73,27 @@ public class MainActivity extends Activity implements CvCameraViewListener {
         super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case mCameraPermissionRequestCode: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
+                    mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+                    mOpenCvCameraView.setCvCameraViewListener(this);
+                    mOpenCvCameraView.enableView();
+                } else {
+                    Toast.makeText(this, R.string.camera_permission_denied_msg, Toast.LENGTH_LONG).show();
+                    this.finish();
+                }
+                return;
+            }
+        }
     }
 
     public void onCameraViewStarted(int width, int height) {
