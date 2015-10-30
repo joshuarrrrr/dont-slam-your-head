@@ -111,9 +111,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     }
 
     public void onCameraViewStarted(int width, int height) {
+        mGray = new Mat();
+        mRgba = new Mat();
     }
 
     public void onCameraViewStopped() {
+        mGray.release();
+        mRgba.release();
     }
 
     @Override
