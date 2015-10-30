@@ -9,9 +9,10 @@
 app/src/main/obj/
 
 # ignore folders which are copied by cmake or the user
+libraries/
 app/src/main/jni/boost
 app/src/main/jni/lsd_slam
 app/src/main/jni/sophus
 app/src/main/jni/g2o
-app/src/main/jni/opencv2
+app/src/main/jni/opencv/
 
