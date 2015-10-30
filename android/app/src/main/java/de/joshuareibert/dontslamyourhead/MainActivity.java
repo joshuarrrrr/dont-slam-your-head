@@ -3,6 +3,7 @@ package de.joshuareibert.dontslamyourhead;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,8 +20,10 @@ import org.opencv.core.Mat;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
 
-    private CameraBridgeViewBase mOpenCvCameraView;
+    private CameraView mCameraView;
     private final int mCameraPermissionRequestCode = 0;
+    private final int mResolutionX = 320;
+    private final int mResolutionY = 240;
     private Mat mRgba;
     private Mat mGray;
 
@@ -56,14 +59,14 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     @Override
     public void onPause() {
         super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (mCameraView != null)
+            mCameraView.disableView();
     }
 
     public void onDestroy() {
         super.onDestroy();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (mCameraView != null)
+            mCameraView.disableView();
     }
 
     @Override
@@ -129,11 +132,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     }
 
     private void initCameraView() {
-        if (mOpenCvCameraView == null) {
-            mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
-            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-            mOpenCvCameraView.setCvCameraViewListener(this);
+        if (mCameraView == null) {
+            mCameraView = (CameraView) findViewById(R.id.cameraView);
+            mCameraView.setVisibility(SurfaceView.VISIBLE);
+            mCameraView.setCvCameraViewListener(this);
+            mCameraView.setResolution(mResolutionX, mResolutionY);
         }
-        mOpenCvCameraView.enableView();
+        mCameraView.enableView();
     }
 }
