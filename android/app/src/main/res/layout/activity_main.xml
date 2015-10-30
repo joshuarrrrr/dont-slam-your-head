@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <org.opencv.android.JavaCameraView
+    <de.joshuareibert.dontslamyourhead.CameraView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone"
-        android:id="@+id/HelloOpenCvView"
+        android:id="@+id/cameraView"
         opencv:show_fps="true"
         opencv:camera_id="any"/>
 
