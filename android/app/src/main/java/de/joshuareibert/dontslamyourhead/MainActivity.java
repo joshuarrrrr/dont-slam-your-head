@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -32,6 +34,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
     }
 
@@ -92,7 +98,11 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initCameraView();
                 } else {
-                    Toast.makeText(this, R.string.camera_permission_denied_msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            this,
+                            R.string.camera_permission_denied_msg,
+                            Toast.LENGTH_LONG
+                    ).show();
                     this.finish();
                 }
                 break;
