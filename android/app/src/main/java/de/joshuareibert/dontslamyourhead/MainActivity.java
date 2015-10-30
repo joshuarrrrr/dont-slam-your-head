@@ -25,7 +25,7 @@ public class MainActivity extends Activity implements CvCameraViewListener {
     }
 
     // native functions
-    public native String stringFromJNI();
+    public native void updateSLAM(long matAddress);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +106,7 @@ public class MainActivity extends Activity implements CvCameraViewListener {
 
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
+        updateSLAM(inputFrame.getNativeObjAddr());
         return inputFrame;
     }
 
