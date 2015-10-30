@@ -12,13 +12,15 @@ import android.view.SurfaceView;
 import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Mat;
 
-public class MainActivity extends Activity implements CvCameraViewListener {
+public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private final int mCameraPermissionRequestCode = 0;
+    private Mat mRgba;
+    private Mat mGray;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -105,9 +107,11 @@ public class MainActivity extends Activity implements CvCameraViewListener {
     }
 
     @Override
-    public Mat onCameraFrame(Mat inputFrame) {
-        updateSLAM(inputFrame.getNativeObjAddr());
-        return inputFrame;
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        mRgba = inputFrame.rgba();
+        mGray = inputFrame.gray();
+        updateSLAM(mGray.getNativeObjAddr());
+        return mGray;
     }
 
     private void initCameraView() {
