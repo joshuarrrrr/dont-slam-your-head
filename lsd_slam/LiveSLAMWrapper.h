@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -50,18 +50,18 @@ friend class LiveSLAMWrapperROS;
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	LiveSLAMWrapper(InputImageStream* imageStream, Output3DWrapper* outputWrapper);
+	LiveSLAMWrapper(); //InputImageStream* imageStream, Output3DWrapper* outputWrapper);
 
 	/** Destructor. */
 	~LiveSLAMWrapper();
-	
-	
+
+
 	/** Runs the main processing loop. Will never return. */
-	void Loop();
-	
+	//void Loop();
+
 	/** Requests a reset from a different thread. */
 	void requestReset();
-	
+
 	/** Resets everything, starting the odometry from the beginning again. */
 	void resetAll();
 
@@ -70,14 +70,14 @@ public:
 
 	/** Writes the given time and pose to the outFile. */
 	void logCameraPose(const SE3& camToWorld, double time);
-	
-	
+
+
 	inline SlamSystem* getSlamSystem() {return monoOdometry;}
-	
+
 private:
-	
-	InputImageStream* imageStream;
-	Output3DWrapper* outputWrapper;
+
+	//InputImageStream* imageStream;
+	//Output3DWrapper* outputWrapper;
 
 	// initialization stuff
 	bool isInitialized;
@@ -89,7 +89,7 @@ private:
 
 	std::string outFileName;
 	std::ofstream* outFile;
-	
+
 	float fx, fy, cx, cy;
 	int width, height;
 

@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -85,11 +85,11 @@ void Relocalizer::updateCurrentFrame(std::shared_ptr<Frame> currentFrame)
 //			doneLast,
 //			currentFrame->id(), nextRelocIDX, maxRelocIDX);
 
-	if (displayDepthMap)
-		Util::displayImage( "DebugWindow DEPTH", cv::Mat(currentFrame->height(), currentFrame->width(), CV_32F, currentFrame->image())*(1/255.0f), false );
+	// if (displayDepthMap)
+	// 	Util::displayImage( "DebugWindow DEPTH", cv::Mat(currentFrame->height(), currentFrame->width(), CV_32F, currentFrame->image())*(1/255.0f), false );
 
-	int pressedKey = Util::waitKey(1);
-	handleKey(pressedKey);
+	//int pressedKey = Util::waitKey(1);
+	//handleKey(pressedKey);
 }
 void Relocalizer::start(std::vector<Frame*, Eigen::aligned_allocator<lsd_slam::Frame*> > &allKeyframesList)
 {

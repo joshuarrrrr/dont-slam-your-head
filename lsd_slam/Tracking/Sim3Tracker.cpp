@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ Sim3Tracker::Sim3Tracker(int w, int h, Eigen::Matrix3f K)
 	debugImageWeightedResP = cv::Mat(height,width,CV_8UC3);
 	debugImageWeightedResD = cv::Mat(height,width,CV_8UC3);
 
-	
+
 	lastResidual = 0;
 	iterationNumber = 0;
 	lastDepthResidual = lastPhotometricResidual = lastDepthResidualUnweighted = lastPhotometricResidualUnweighted = lastResidualUnweighted = 0;
@@ -589,20 +589,20 @@ void Sim3Tracker::calcSim3Buffers(
 
 
 
-	if(plotSim3TrackingIterationInfo)
-	{
-		Util::displayImage( "P Residuals", debugImageResiduals );
-		Util::displayImage( "D Residuals", debugImageDepthResiduals );
+	// if(plotSim3TrackingIterationInfo)
+	// {
+	// 	Util::displayImage( "P Residuals", debugImageResiduals );
+	// 	Util::displayImage( "D Residuals", debugImageDepthResiduals );
 
-		if(plotWeights)
-		{
-			Util::displayImage( "Huber Weights", debugImageHuberWeight );
-			Util::displayImage( "DV Weights", debugImageWeightD );
-			Util::displayImage( "IV Weights", debugImageWeightP );
-			Util::displayImage( "WP Res", debugImageWeightedResP );
-			Util::displayImage( "WD Res", debugImageWeightedResD );
-		}
-	}
+	// 	if(plotWeights)
+	// 	{
+	// 		Util::displayImage( "Huber Weights", debugImageHuberWeight );
+	// 		Util::displayImage( "DV Weights", debugImageWeightD );
+	// 		Util::displayImage( "IV Weights", debugImageWeightP );
+	// 		Util::displayImage( "WP Res", debugImageWeightedResP );
+	// 		Util::displayImage( "WD Res", debugImageWeightedResD );
+	// 	}
+	// }
 
 }
 
@@ -1063,36 +1063,36 @@ void Sim3Tracker::calcResidualAndBuffers_debugStart()
 
 void Sim3Tracker::calcResidualAndBuffers_debugFinish(int w)
 {
-	if(plotTrackingIterationInfo)
-	{
-		Util::displayImage( "Weights", debugImageWeights );
-		Util::displayImage( "second_frame", debugImageSecondFrame );
-		Util::displayImage( "Intensities of second_frame at transformed positions", debugImageOldImageSource );
-		Util::displayImage( "Intensities of second_frame at pointcloud in first_frame", debugImageOldImageWarped );
-		Util::displayImage( "Residuals", debugImageResiduals );
-		Util::displayImage( "DepthVar Weights", debugImageExternalWeights );
-		Util::displayImage( "Depth Residuals", debugImageDepthResiduals );
+	// if(plotTrackingIterationInfo)
+	// {
+	// 	Util::displayImage( "Weights", debugImageWeights );
+	// 	Util::displayImage( "second_frame", debugImageSecondFrame );
+	// 	Util::displayImage( "Intensities of second_frame at transformed positions", debugImageOldImageSource );
+	// 	Util::displayImage( "Intensities of second_frame at pointcloud in first_frame", debugImageOldImageWarped );
+	// 	Util::displayImage( "Residuals", debugImageResiduals );
+	// 	Util::displayImage( "DepthVar Weights", debugImageExternalWeights );
+	// 	Util::displayImage( "Depth Residuals", debugImageDepthResiduals );
 
-		// wait for key and handle it
-		bool looping = true;
-		while(looping)
-		{
-			int k = Util::waitKey(1);
-			if(k == -1)
-			{
-				if(autoRunWithinFrame)
-					break;
-				else
-					continue;
-			}
+	// 	// wait for key and handle it
+	// 	bool looping = true;
+	// 	while(looping)
+	// 	{
+	// 		int k = Util::waitKey(1);
+	// 		if(k == -1)
+	// 		{
+	// 			if(autoRunWithinFrame)
+	// 				break;
+	// 			else
+	// 				continue;
+	// 		}
 
-			char key = k;
-			if(key == ' ')
-				looping = false;
-			else
-				handleKey(k);
-		}
-	}
+	// 		char key = k;
+	// 		if(key == ' ')
+	// 			looping = false;
+	// 		else
+	// 			handleKey(k);
+	// 	}
+	// }
 
 	if(saveAllTrackingStagesInternal)
 	{

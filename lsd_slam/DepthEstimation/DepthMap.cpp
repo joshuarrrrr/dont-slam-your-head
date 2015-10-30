@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -274,7 +274,7 @@ bool DepthMap::observeDepthCreate(const int &x, const int &y, const int &idx, Ru
 
 	if(error < 0 || result_var > MAX_VAR)
 		return false;
-	
+
 	result_idepth = UNZERO(result_idepth);
 
 	// add hypothesis
@@ -287,7 +287,7 @@ bool DepthMap::observeDepthCreate(const int &x, const int &y, const int &idx, Ru
 		debugImageHypothesisHandling.at<cv::Vec3b>(y, x) = cv::Vec3b(255,255,255); // white for GOT CREATED
 
 	if(enablePrintDebugInfo) stats->num_observe_created++;
-	
+
 	return true;
 }
 
@@ -775,7 +775,7 @@ template<bool removeOcclusions> void DepthMap::regularizeDepthMapRow(int validit
 
 			if(!destRead->isValid)
 				continue;
-			
+
 			float sum=0, val_sum=0, sumIvar=0;//, min_varObs = 1e20;
 			int numOccluding = 0, numNotOccluding = 0;
 
@@ -836,7 +836,7 @@ template<bool removeOcclusions> void DepthMap::regularizeDepthMapRow(int validit
 
 			sum = sum / sumIvar;
 			sum = UNZERO(sum);
-			
+
 
 			// update!
 			dest->idepth_smoothed = sum;
@@ -988,14 +988,14 @@ void DepthMap::initializeFromGTDepth(Frame* new_frame)
 			}
 		}
 	}
-	
+
 
 	for(int y=0;y<height;y++)
 	{
 		for(int x=0;x<width;x++)
 		{
 			float idepthValue = idepth[x+y*width];
-			
+
 			if(!isnanf(idepthValue) && idepthValue > 0)
 			{
 				currentDepthMap[x+y*width] = DepthMapPixelHypothesis(
@@ -1106,7 +1106,7 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 
 	resetCounters();
 
-	
+
 	if(plotStereoImages)
 	{
 		cv::Mat keyFrameImage(activeKeyFrame->height(), activeKeyFrame->width(), CV_32F, const_cast<float*>(activeKeyFrameImageData));
@@ -1145,7 +1145,7 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 	msRegularize = 0.9*msRegularize + 0.1*((tv_end.tv_sec-tv_start.tv_sec)*1000.0f + (tv_end.tv_usec-tv_start.tv_usec)/1000.0f);
 	nRegularize++;
 
-	
+
 	// Update depth in keyframe
 	if(!activeKeyFrame->depthHasBeenUpdatedFlag)
 	{
@@ -1166,11 +1166,11 @@ void DepthMap::updateKeyframe(std::deque< std::shared_ptr<Frame> > referenceFram
 	activeKeyFrame->numMappedOnThisTotal++;
 
 
-	if(plotStereoImages)
-	{
-		Util::displayImage( "Stereo Key Frame", debugImageHypothesisHandling, false );
-		Util::displayImage( "Stereo Reference Frame", debugImageStereoLines, false );
-	}
+	// if(plotStereoImages)
+	// {
+	// 	Util::displayImage( "Stereo Key Frame", debugImageHypothesisHandling, false );
+	// 	Util::displayImage( "Stereo Reference Frame", debugImageStereoLines, false );
+	// }
 
 
 

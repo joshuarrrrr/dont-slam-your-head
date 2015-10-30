@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -35,18 +35,24 @@ namespace lsd_slam
 {
 
 
-LiveSLAMWrapper::LiveSLAMWrapper(InputImageStream* imageStream, Output3DWrapper* outputWrapper)
+LiveSLAMWrapper::LiveSLAMWrapper() //InputImageStream* imageStream, Output3DWrapper* outputWrapper)
 {
-	this->imageStream = imageStream;
-	this->outputWrapper = outputWrapper;
-	imageStream->getBuffer()->setReceiver(this);
+	//this->imageStream = imageStream;
+	//this->outputWrapper = outputWrapper;
+	//imageStream->getBuffer()->setReceiver(this);
 
-	fx = imageStream->fx();
+	/*fx = imageStream->fx();
 	fy = imageStream->fy();
 	cx = imageStream->cx();
 	cy = imageStream->cy();
 	width = imageStream->width();
-	height = imageStream->height();
+	height = imageStream->height();*/
+	fx = 1.0;
+	fy = 1.0;
+	cx = 1.0;
+	cy = 1.0;
+	width = 320;
+	height = 240;
 
 	outFileName = packagePath+"estimated_poses.txt";
 
@@ -63,7 +69,7 @@ LiveSLAMWrapper::LiveSLAMWrapper(InputImageStream* imageStream, Output3DWrapper*
 	// make Odometry
 	monoOdometry = new SlamSystem(width, height, K_sophus, doSlam);
 
-	monoOdometry->setVisualization(outputWrapper);
+	//monoOdometry->setVisualization(outputWrapper);
 
 	imageSeqNumber = 0;
 }
@@ -81,7 +87,7 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 	}
 }
 
-void LiveSLAMWrapper::Loop()
+/*void LiveSLAMWrapper::Loop()
 {
 	while (true) {
 		boost::unique_lock<boost::recursive_mutex> waitLock(imageStream->getBuffer()->getMutex());
@@ -89,8 +95,8 @@ void LiveSLAMWrapper::Loop()
 			notifyCondition.wait(waitLock);
 		}
 		waitLock.unlock();
-		
-		
+
+
 		if(fullResetRequested)
 		{
 			resetAll();
@@ -98,15 +104,15 @@ void LiveSLAMWrapper::Loop()
 			if (!(imageStream->getBuffer()->size() > 0))
 				continue;
 		}
-		
+
 		TimestampedMat image = imageStream->getBuffer()->first();
 		imageStream->getBuffer()->popFront();
-		
+
 		// process image
 		//Util::displayImage("MyVideo", image.data);
 		newImageCallback(image.data, image.timestamp);
 	}
-}
+}*/
 
 
 void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
@@ -119,7 +125,7 @@ void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
 		grayImg = img;
 	else
 		cvtColor(img, grayImg, CV_RGB2GRAY);
-	
+
 
 	// Assert that we work with 8 bit images
 	assert(grayImg.elemSize() == 1);
@@ -176,7 +182,7 @@ void LiveSLAMWrapper::resetAll()
 		Sophus::Matrix3f K;
 		K << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0;
 		monoOdometry = new SlamSystem(width,height,K, doSlam);
-		monoOdometry->setVisualization(outputWrapper);
+		//monoOdometry->setVisualization(outputWrapper);
 
 	}
 	imageSeqNumber = 0;
