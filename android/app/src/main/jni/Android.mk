@@ -24,4 +24,5 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/g2o/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/boost/include/
 LOCAL_STATIC_LIBRARIES := boost_system boost_thread
 LOCAL_SHARED_LIBRARIES := lsd_slam opencv_java3
+LOCAL_LDLIBS := -llog
 include $(BUILD_SHARED_LIBRARY)

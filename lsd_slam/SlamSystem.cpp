@@ -42,6 +42,9 @@
 
 #ifdef ANDROID
 #include <android/log.h>
+#define  LOG_TAG "SlamSystem.cpp"
+#define  LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #endif
 
 #include "opencv2/opencv.hpp"
@@ -609,6 +612,9 @@ bool SlamSystem::updateKeyframe()
 
 	if(outputWrapper != 0 && continuousPCOutput && currentKeyFrame != 0)
 		outputWrapper->publishKeyframe(currentKeyFrame.get());
+
+	if(currentKeyFrame != 0)
+		LOGD("print keyframe here\n");
 
 	return true;
 }
