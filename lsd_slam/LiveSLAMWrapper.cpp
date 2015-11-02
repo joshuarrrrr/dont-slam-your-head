@@ -115,16 +115,16 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 }*/
 
 
-void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
+void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, Timestamp imgTime)
 {
 	++ imageSeqNumber;
 
 	// Convert image to grayscale, if necessary
-	cv::Mat grayImg;
+	/*cv::Mat grayImg;
 	if (img.channels() == 1)
 		grayImg = img;
 	else
-		cvtColor(img, grayImg, CV_RGB2GRAY);
+		cvtColor(img, grayImg, CV_RGB2GRAY);*/
 
 
 	// Assert that we work with 8 bit images
