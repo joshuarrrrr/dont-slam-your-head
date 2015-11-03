@@ -1,5 +1,5 @@
 # camera_calibration
-Tool to calibrate a camera for use with LSD-SLAM.
+Tool to calibrate a camera for use with LSD-SLAM ([Source](http://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html)).
 
 ## building
 - create build-directory and cd into it:
