@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -32,12 +31,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     // native functions
     public native void updateSLAM(long matAddress);
+    public native void resetSLAM();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -83,7 +82,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_reset) {
+            resetSLAM();
             return true;
         }
 

@@ -18,4 +18,9 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat& image = *(cv::Mat*)matAddress;
     slam.newImageCallback(image, lsd_slam::Timestamp::now());
 }
+
+JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
+        JNIEnv* env, jobject thiz) {
+    slam.resetAll();
+}
 }
