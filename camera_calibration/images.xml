@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<images>
+<!-- put the list of images to use for calibration here, e.g.:
+images/CameraCalibration/VID5/xx1.jpg
+images/CameraCalibration/VID5/xx2.jpg
+images/CameraCalibration/VID5/xx3.jpg
+images/CameraCalibration/VID5/xx4.jpg
+images/CameraCalibration/VID5/xx5.jpg
+images/CameraCalibration/VID5/xx6.jpg
+images/CameraCalibration/VID5/xx7.jpg
+images/CameraCalibration/VID5/xx8.jpg -->
+</images>
+</opencv_storage>
