@@ -613,13 +613,6 @@ bool SlamSystem::updateKeyframe()
 	if(outputWrapper != 0 && continuousPCOutput && currentKeyFrame != 0)
 		outputWrapper->publishKeyframe(currentKeyFrame.get());
 
-	if(currentKeyFrame != 0) {
-		SE3 const& pose = se3FromSim3(currentKeyFrame.get()->getScaledCamToWorld());
-		Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
-		Eigen::Vector3f trans = pose.translation().cast<float>();
-		LOGD("keyframe translation: %.2f, %.2f, %.2f\n", trans[0], trans[1], trans[2]);
-	}
-
 	return true;
 }
 
@@ -1001,6 +994,10 @@ void SlamSystem::trackFrame(uchar* image, unsigned int frameID, bool blockUntilM
 	{
 		outputWrapper->publishTrackedFrame(trackingNewFrame.get());
 	}
+	SE3 const& pose = se3FromSim3(trackingNewFrame.get()->getScaledCamToWorld());
+	Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
+	Eigen::Vector3f trans = pose.translation().cast<float>();
+	LOGD("frame translation: %.2f, %.2f, %.2f\n", trans[0], trans[1], trans[2]);
 
 
 	// Keyframe selection
