@@ -340,20 +340,23 @@ int main(int argc, char* argv[])
         }
 
         //------------------------------ Show image and check for input commands -------------------
-        imshow("Image View", view);
-        char key = (char)waitKey(s.inputCapture.isOpened() ? 50 : s.delay);
+        if (s.inputType != Settings::IMAGE_LIST) {
+            imshow("Image View", view);
+            char key = (char)waitKey(s.inputCapture.isOpened() ? 50 : s.delay);
 
-        if( key  == ESC_KEY )
-            break;
+            if( key  == ESC_KEY )
+                break;
 
-        if( key == 'u' && mode == CALIBRATED )
-           s.showUndistorsed = !s.showUndistorsed;
+            if( key == 'u' && mode == CALIBRATED )
+               s.showUndistorsed = !s.showUndistorsed;
 
-        if( s.inputCapture.isOpened() && key == 'g' )
-        {
-            mode = CAPTURING;
-            imagePoints.clear();
-        }
+            if( s.inputCapture.isOpened() && key == 'g' )
+            {
+                mode = CAPTURING;
+                imagePoints.clear();
+            }
+        } else
+            cout << "... processed " << i + 1 << " of " << s.imageList.size() << " images" << std::endl;
     }
 
     // -----------------------Show the undistorted image for the image list ------------------------
