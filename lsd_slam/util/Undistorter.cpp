@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -95,8 +95,8 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 	remapX = nullptr;
 	remapY = nullptr;
 
-	
-	
+
+
 	// read parameters
 	std::ifstream infile(configFileName);
 	assert(infile.good());
@@ -178,7 +178,7 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 		float fy = inputCalibration[1] * in_height;
 		float cx = inputCalibration[2] * in_width - 0.5;
 		float cy = inputCalibration[3] * in_height - 0.5;
-		
+
 		// scale calibration parameters to input size
 		double xfactor = in_width / (1.0 * in_width);
 		double yfactor = in_height / (1.0 * in_height);
@@ -328,7 +328,7 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 		out_height = in_height;
 	}
 
-	
+
 	originalK_ = cv::Mat(3, 3, CV_64F, cv::Scalar(0));
 	originalK_.at<double>(0, 0) = inputCalibration[0];
 	originalK_.at<double>(1, 1) = inputCalibration[1];
@@ -359,26 +359,26 @@ void UndistorterPTAM::undistort(const cv::Mat& image, cv::OutputArray result) co
 		result.getMatRef() = image;
 		return;
 	}
-	
+
 	if (image.rows != in_height || image.cols != in_width)
 	{
 		printf("UndistorterPTAM: input image size differs from expected input size! Not undistorting.\n");
 		result.getMatRef() = image;
 		return;
 	}
-	
+
 	if (in_height == out_height && in_width == out_width && inputCalibration[4] == 0)
 	{
 		// No transformation if neither distortion nor resize
 		result.getMatRef() = image;
 		return;
 	}
-	
+
 	result.create(out_height, out_width, CV_8U);
 	cv::Mat resultMat = result.getMatRef();
 	assert(result.getMatRef().isContinuous());
 	assert(image.isContinuous());
-	
+
 	uchar* data = resultMat.data;
 
 	for(int idx = out_width*out_height-1;idx>=0;idx--)
@@ -449,7 +449,7 @@ bool UndistorterPTAM::isValid() const
 UndistorterOpenCV::UndistorterOpenCV(const char* configFileName)
 {
 	valid = true;
-	
+
 	// read parameters
 	std::ifstream infile(configFileName);
 	assert(infile.good());
@@ -511,7 +511,54 @@ UndistorterOpenCV::UndistorterOpenCV(const char* configFileName)
 		printf("Out: Failed to Read Output resolution... not rectifying.\n");
 		valid = false;
 	}
-	
+	calcK();
+}
+
+UndistorterOpenCV::UndistorterOpenCV(	float fx, float fy, float cx, float cy,
+										float k1, float k2, float p1, float p2,
+										int inputWidth, int inputHeight,
+										std::string const& dist,
+										int outputWidth, int outputHeight):
+in_width(inputWidth),
+in_height(inputHeight),
+out_width(outputWidth),
+out_height(outputHeight)
+{
+	inputCalibration[0] = fx;
+	inputCalibration[1] = fy;
+	inputCalibration[2] = cx;
+	inputCalibration[3] = cy;
+	inputCalibration[4] = k1;
+	inputCalibration[5] = k2;
+	inputCalibration[6] = p1;
+	inputCalibration[7] = p2;
+
+	if(dist == "crop")
+	{
+		outputCalibration = -1;
+		printf("Out: Crop\n");
+	}
+	else if(dist == "full")
+	{
+		outputCalibration = -2;
+		printf("Out: Full\n");
+	}
+	else if(dist == "none")
+	{
+		printf("NO RECTIFICATION\n");
+		valid = false;
+	}
+	else
+	{
+		printf("Out: Failed to Read Output pars... not rectifying.\n");
+		valid = false;
+	}
+
+	calcK();
+}
+
+void UndistorterOpenCV::calcK()
+{
 	cv::Mat distCoeffs = cv::Mat::zeros(4, 1, CV_32F);
 	for (int i = 0; i < 4; ++ i)
 		distCoeffs.at<float>(i, 0) = inputCalibration[4 + i];
@@ -543,16 +590,16 @@ UndistorterOpenCV::UndistorterOpenCV(const char* configFileName)
 	if (valid)
 	{
 		K_ = cv::getOptimalNewCameraMatrix(originalK_, distCoeffs, cv::Size(in_width, in_height), (outputCalibration == -2) ? 1 : 0, cv::Size(out_width, out_height), nullptr, false);
-		
+
 		cv::initUndistortRectifyMap(originalK_, distCoeffs, cv::Mat(), K_,
 				cv::Size(out_width, out_height), CV_16SC2, map1, map2);
-		
+
 		originalK_.at<double>(0, 0) /= in_width;
 		originalK_.at<double>(0, 2) /= in_width;
 		originalK_.at<double>(1, 1) /= in_height;
 		originalK_.at<double>(1, 2) /= in_height;
 	}
-	
+
 	originalK_ = originalK_.t();
 	K_ = K_.t();
 }
