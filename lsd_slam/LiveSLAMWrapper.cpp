@@ -35,14 +35,17 @@ namespace lsd_slam
 {
 
 
-LiveSLAMWrapper::LiveSLAMWrapper()
+LiveSLAMWrapper::LiveSLAMWrapper(Undistorter* undistorter)
 {
-	fx = 2836.06;
-	fy = 2836.06;
-	cx = 1223.5;
-	cy = 1631.5;
-	width = 320;
-	height = 240;
+	this->undistorter = undistorter;
+
+	fx = undistorter->getK().at<double>(0, 0);
+	fy = undistorter->getK().at<double>(1, 1);
+	cx = undistorter->getK().at<double>(2, 0);
+	cy = undistorter->getK().at<double>(2, 1);
+
+	width = undistorter->getOutputWidth();
+	height = undistorter->getOutputHeight();
 
 	outFileName = packagePath+"estimated_poses.txt";
 
@@ -58,8 +61,6 @@ LiveSLAMWrapper::LiveSLAMWrapper()
 
 	// make Odometry
 	monoOdometry = new SlamSystem(width, height, K_sophus, doSlam);
-
-	//monoOdometry->setVisualization(outputWrapper);
 
 	imageSeqNumber = 0;
 }
@@ -108,14 +109,6 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, Timestamp imgTime)
 {
 	++ imageSeqNumber;
-
-	// Convert image to grayscale, if necessary
-	/*cv::Mat grayImg;
-	if (img.channels() == 1)
-		grayImg = img;
-	else
-		cvtColor(img, grayImg, CV_RGB2GRAY);*/
-
 
 	// Assert that we work with 8 bit images
 	assert(grayImg.elemSize() == 1);

@@ -28,6 +28,7 @@
 #include "IOWrapper/NotifyBuffer.h"
 #include "IOWrapper/TimestampedObject.h"
 #include "util/SophusUtil.h"
+#include "util/Undistorter.h"
 
 namespace cv {
 	class Mat;
@@ -50,7 +51,7 @@ friend class LiveSLAMWrapperROS;
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	LiveSLAMWrapper();
+	LiveSLAMWrapper(Undistorter* undistorter);
 
 	/** Destructor. */
 	~LiveSLAMWrapper();
@@ -79,7 +80,7 @@ private:
 	// initialization stuff
 	bool isInitialized;
 
-
+	Undistorter* undistorter;
 
 	// monoOdometry
 	SlamSystem* monoOdometry;
