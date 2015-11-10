@@ -50,7 +50,7 @@ friend class LiveSLAMWrapperROS;
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	LiveSLAMWrapper(); //InputImageStream* imageStream, Output3DWrapper* outputWrapper);
+	LiveSLAMWrapper();
 
 	/** Destructor. */
 	~LiveSLAMWrapper();
@@ -75,9 +75,6 @@ public:
 	inline SlamSystem* getSlamSystem() {return monoOdometry;}
 
 private:
-
-	//InputImageStream* imageStream;
-	//Output3DWrapper* outputWrapper;
 
 	// initialization stuff
 	bool isInitialized;

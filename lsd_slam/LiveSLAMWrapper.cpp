@@ -35,22 +35,12 @@ namespace lsd_slam
 {
 
 
-LiveSLAMWrapper::LiveSLAMWrapper() //InputImageStream* imageStream, Output3DWrapper* outputWrapper)
+LiveSLAMWrapper::LiveSLAMWrapper()
 {
-	//this->imageStream = imageStream;
-	//this->outputWrapper = outputWrapper;
-	//imageStream->getBuffer()->setReceiver(this);
-
-	/*fx = imageStream->fx();
-	fy = imageStream->fy();
-	cx = imageStream->cx();
-	cy = imageStream->cy();
-	width = imageStream->width();
-	height = imageStream->height();*/
-	fx = 1.0;
-	fy = 1.0;
-	cx = 1.0;
-	cy = 1.0;
+	fx = 2836.06;
+	fy = 2836.06;
+	cx = 1223.5;
+	cy = 1631.5;
 	width = 320;
 	height = 240;
 
