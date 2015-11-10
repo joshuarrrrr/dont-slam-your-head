@@ -531,6 +531,8 @@ in_height(inputHeight),
 out_width(outputWidth),
 out_height(outputHeight)
 {
+	valid = true;
+
 	inputCalibration[0] = fx;
 	inputCalibration[1] = fy;
 	inputCalibration[2] = cx;
