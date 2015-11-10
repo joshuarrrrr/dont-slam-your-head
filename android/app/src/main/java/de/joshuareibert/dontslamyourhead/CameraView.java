@@ -13,6 +13,12 @@ public class CameraView extends JavaCameraView {
         super(context, attrs);
     }
 
+    public void setFixedFocus() {
+        Camera.Parameters params = mCamera.getParameters();
+        params.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
+        mCamera.setParameters(params);
+    }
+
     public void setResolution(int width, int height) {
         disconnectCamera();
         mMaxHeight = height;
