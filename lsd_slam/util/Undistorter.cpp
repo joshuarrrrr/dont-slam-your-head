@@ -28,6 +28,13 @@
 #include <Eigen/Core>
 #include "util/settings.h"
 
+#ifdef ANDROID
+#include <android/log.h>
+#define  LOG_TAG "Undistorter.cpp"
+#define  LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#endif
+
 namespace lsd_slam
 {
 
@@ -39,7 +46,7 @@ Undistorter* Undistorter::getUndistorterForFile(const char* configFilename)
 {
 	std::string completeFileName = configFilename;
 
-	printf("Reading Calibration from file %s",completeFileName.c_str());
+	LOGD("Reading Calibration from file %s",completeFileName.c_str());
 
 
 	std::ifstream f(completeFileName.c_str());
@@ -48,19 +55,19 @@ Undistorter* Undistorter::getUndistorterForFile(const char* configFilename)
 		f.close();
 
 		completeFileName = packagePath+"calib/"+configFilename;
-		printf(" ... not found!\n Trying %s", completeFileName.c_str());
+		LOGD(" ... not found!\n Trying %s", completeFileName.c_str());
 
 		f.open(completeFileName.c_str());
 
 		if (!f.good())
 		{
-			printf(" ... not found. Cannot operate without calibration, shutting down.\n");
+			LOGD(" ... not found. Cannot operate without calibration, shutting down.\n");
 			f.close();
 			return 0;
 		}
 	}
 
-	printf(" ... found!\n");
+	LOGD(" ... found!\n");
 
 	std::string l1;
 	std::getline(f,l1);
@@ -73,14 +80,14 @@ Undistorter* Undistorter::getUndistorterForFile(const char* configFilename)
 			&ic[0], &ic[1], &ic[2], &ic[3], &ic[4],
 			&ic[5], &ic[6], &ic[7]) == 8)
 	{
-		printf("found OpenCV camera model, building rectifier.\n");
+		LOGD("found OpenCV camera model, building rectifier.\n");
 		Undistorter* u = new UndistorterOpenCV(completeFileName.c_str());
 		if(!u->isValid()) return 0;
 		return u;
 	}
 	else
 	{
-		printf("found ATAN camera model, building rectifier.\n");
+		LOGD("found ATAN camera model, building rectifier.\n");
 		Undistorter* u = new UndistorterPTAM(completeFileName.c_str());
 		if(!u->isValid()) return 0;
 		return u;
@@ -116,13 +123,13 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 	if(std::sscanf(l1.c_str(), "%f %f %f %f %f", &inputCalibration[0], &inputCalibration[1], &inputCalibration[2], &inputCalibration[3], &inputCalibration[4]) == 5 &&
 			std::sscanf(l2.c_str(), "%d %d", &in_width, &in_height) == 2)
 	{
-		printf("Input resolution: %d %d\n",in_width, in_height);
-		printf("In: %f %f %f %f %f\n",
+		LOGD("Input resolution: %d %d\n",in_width, in_height);
+		LOGD("In: %f %f %f %f %f\n",
 				inputCalibration[0], inputCalibration[1], inputCalibration[2], inputCalibration[3], inputCalibration[4]);
 	}
 	else
 	{
-		printf("Failed to read camera calibration (invalid format?)\nCalibration file: %s\n", configFileName);
+		LOGD("Failed to read camera calibration (invalid format?)\nCalibration file: %s\n", configFileName);
 		valid = false;
 	}
 
@@ -130,25 +137,25 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 	if(l3 == "crop")
 	{
 		outputCalibration[0] = -1;
-		printf("Out: Crop\n");
+		LOGD("Out: Crop\n");
 	}
 	else if(l3 == "full")
 	{
 		outputCalibration[0] = -2;
-		printf("Out: Full\n");
+		LOGD("Out: Full\n");
 	}
 	else if(l3 == "none")
 	{
-		printf("NO RECTIFICATION\n");
+		LOGD("NO RECTIFICATION\n");
 	}
 	else if(std::sscanf(l3.c_str(), "%f %f %f %f %f", &outputCalibration[0], &outputCalibration[1], &outputCalibration[2], &outputCalibration[3], &outputCalibration[4]) == 5)
 	{
-		printf("Out: %f %f %f %f %f\n",
+		LOGD("Out: %f %f %f %f %f\n",
 				outputCalibration[0], outputCalibration[1], outputCalibration[2], outputCalibration[3], outputCalibration[4]);
 	}
 	else
 	{
-		printf("Out: Failed to Read Output pars... not rectifying.\n");
+		LOGD("Out: Failed to Read Output pars... not rectifying.\n");
 		valid = false;
 	}
 
@@ -156,11 +163,11 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 	// l4
 	if(std::sscanf(l4.c_str(), "%d %d", &out_width, &out_height) == 2)
 	{
-		printf("Output resolution: %d %d\n",out_width, out_height);
+		LOGD("Output resolution: %d %d\n",out_width, out_height);
 	}
 	else
 	{
-		printf("Out: Failed to Read Output resolution... not rectifying.\n");
+		LOGD("Out: Failed to Read Output resolution... not rectifying.\n");
 		valid = false;
 	}
 
@@ -211,10 +218,10 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 			float trans_top_radius = tan(top_radius * dist)/d2t;
 			float trans_bottom_radius = tan(bottom_radius * dist)/d2t;
 
-			//printf("left_radius: %f -> %f\n", left_radius, trans_left_radius);
-			//printf("right_radius: %f -> %f\n", right_radius, trans_right_radius);
-			//printf("top_radius: %f -> %f\n", top_radius, trans_top_radius);
-			//printf("bottom_radius: %f -> %f\n", bottom_radius, trans_bottom_radius);
+			//LOGD("left_radius: %f -> %f\n", left_radius, trans_left_radius);
+			//LOGD("right_radius: %f -> %f\n", right_radius, trans_right_radius);
+			//LOGD("top_radius: %f -> %f\n", top_radius, trans_top_radius);
+			//LOGD("bottom_radius: %f -> %f\n", bottom_radius, trans_bottom_radius);
 
 
 			ofy = fy * ((top_radius + bottom_radius) / (trans_top_radius + trans_bottom_radius)) * ((float)out_height / (float)in_height);
@@ -223,8 +230,8 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 			ofx = fx * ((left_radius + right_radius) / (trans_left_radius + trans_right_radius)) * ((float)out_width / (float)in_width);
 			ocx = (trans_left_radius/left_radius) * ofx*cx/fx;
 
-			printf("new K: %f %f %f %f\n",ofx,ofy,ocx,ocy);
-			printf("old K: %f %f %f %f\n",fx,fy,cx,cy);
+			LOGD("new K: %f %f %f %f\n",ofx,ofy,ocx,ocy);
+			LOGD("old K: %f %f %f %f\n",fx,fy,cx,cy);
 		}
 		else if(outputCalibration[0] == -2)	 // "full"
 		{
@@ -244,10 +251,10 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 			float trans_bl_radius = tan(bl_radius * dist)/d2t;
 			float trans_br_radius = tan(br_radius * dist)/d2t;
 
-			//printf("trans_tl_radius: %f -> %f\n", tl_radius, trans_tl_radius);
-			//printf("trans_tr_radius: %f -> %f\n", tr_radius, trans_tr_radius);
-			//printf("trans_bl_radius: %f -> %f\n", bl_radius, trans_bl_radius);
-			//printf("trans_br_radius: %f -> %f\n", br_radius, trans_br_radius);
+			//LOGD("trans_tl_radius: %f -> %f\n", tl_radius, trans_tl_radius);
+			//LOGD("trans_tr_radius: %f -> %f\n", tr_radius, trans_tr_radius);
+			//LOGD("trans_bl_radius: %f -> %f\n", bl_radius, trans_bl_radius);
+			//LOGD("trans_br_radius: %f -> %f\n", br_radius, trans_br_radius);
 
 
 			float hor = std::max(br_radius,tr_radius) + std::max(bl_radius,tl_radius);
@@ -262,8 +269,8 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 			ofx = fx * ((hor) / (trans_hor)) * ((float)out_width / (float)in_width);
 			ocx = std::max(trans_bl_radius/bl_radius,trans_tl_radius/tl_radius) * ofx*cx/fx;
 
-			printf("new K: %f %f %f %f\n",ofx,ofy,ocx,ocy);
-			printf("old K: %f %f %f %f\n",fx,fy,cx,cy);
+			LOGD("new K: %f %f %f %f\n",ofx,ofy,ocx,ocy);
+			LOGD("old K: %f %f %f %f\n",fx,fy,cx,cy);
 		}
 		else
 		{
@@ -314,11 +321,11 @@ UndistorterPTAM::UndistorterPTAM(const char* configFileName)
 			}
 		}
 
-		printf("Prepped Warp matrices\n");
+		LOGD("Prepped Warp matrices\n");
 	}
 	else
 	{
-		printf("Not Rectifying\n");
+		LOGD("Not Rectifying\n");
 		outputCalibration[0] = inputCalibration[0];
 		outputCalibration[1] = inputCalibration[1];
 		outputCalibration[2] = inputCalibration[2];
@@ -362,7 +369,7 @@ void UndistorterPTAM::undistort(const cv::Mat& image, cv::OutputArray result) co
 
 	if (image.rows != in_height || image.cols != in_width)
 	{
-		printf("UndistorterPTAM: input image size differs from expected input size! Not undistorting.\n");
+		LOGD("UndistorterPTAM: input image size differs from expected input size! Not undistorting.\n");
 		result.getMatRef() = image;
 		return;
 	}
@@ -468,14 +475,14 @@ UndistorterOpenCV::UndistorterOpenCV(const char* configFileName)
   				) == 8 &&
 			std::sscanf(l2.c_str(), "%d %d", &in_width, &in_height) == 2)
 	{
-		printf("Input resolution: %d %d\n",in_width, in_height);
-		printf("In: %f %f %f %f %f %f %f %f\n",
+		LOGD("Input resolution: %d %d\n",in_width, in_height);
+		LOGD("In: %f %f %f %f %f %f %f %f\n",
 				inputCalibration[0], inputCalibration[1], inputCalibration[2], inputCalibration[3], inputCalibration[4],
 				inputCalibration[5], inputCalibration[6], inputCalibration[7]);
 	}
 	else
 	{
-		printf("Failed to read camera calibration (invalid format?)\nCalibration file: %s\n", configFileName);
+		LOGD("Failed to read camera calibration (invalid format?)\nCalibration file: %s\n", configFileName);
 		valid = false;
 	}
 
@@ -483,32 +490,32 @@ UndistorterOpenCV::UndistorterOpenCV(const char* configFileName)
 	if(l3 == "crop")
 	{
 		outputCalibration = -1;
-		printf("Out: Crop\n");
+		LOGD("Out: Crop\n");
 	}
 	else if(l3 == "full")
 	{
 		outputCalibration = -2;
-		printf("Out: Full\n");
+		LOGD("Out: Full\n");
 	}
 	else if(l3 == "none")
 	{
-		printf("NO RECTIFICATION\n");
+		LOGD("NO RECTIFICATION\n");
 		valid = false;
 	}
 	else
 	{
-		printf("Out: Failed to Read Output pars... not rectifying.\n");
+		LOGD("Out: Failed to Read Output pars... not rectifying.\n");
 		valid = false;
 	}
 
 	// l4
 	if(std::sscanf(l4.c_str(), "%d %d", &out_width, &out_height) == 2)
 	{
-		printf("Output resolution: %d %d\n", out_width, out_height);
+		LOGD("Output resolution: %d %d\n", out_width, out_height);
 	}
 	else
 	{
-		printf("Out: Failed to Read Output resolution... not rectifying.\n");
+		LOGD("Out: Failed to Read Output resolution... not rectifying.\n");
 		valid = false;
 	}
 	calcK();
@@ -536,21 +543,21 @@ out_height(outputHeight)
 	if(dist == "crop")
 	{
 		outputCalibration = -1;
-		printf("Out: Crop\n");
+		LOGD("Out: Crop\n");
 	}
 	else if(dist == "full")
 	{
 		outputCalibration = -2;
-		printf("Out: Full\n");
+		LOGD("Out: Full\n");
 	}
 	else if(dist == "none")
 	{
-		printf("NO RECTIFICATION\n");
+		LOGD("NO RECTIFICATION\n");
 		valid = false;
 	}
 	else
 	{
-		printf("Out: Failed to Read Output pars... not rectifying.\n");
+		LOGD("Out: Failed to Read Output pars... not rectifying.\n");
 		valid = false;
 	}
 
@@ -565,15 +572,15 @@ void UndistorterOpenCV::calcK()
 
 	if(inputCalibration[2] < 1.0f)
 	{
-		printf("WARNING: cx = %f < 1, which should not be the case for normal cameras.!\n", inputCalibration[2]);
-		printf("Possibly this is due to a recent change in the calibration file format, please see the README.md.\n");
+		LOGD("WARNING: cx = %f < 1, which should not be the case for normal cameras.!\n", inputCalibration[2]);
+		LOGD("Possibly this is due to a recent change in the calibration file format, please see the README.md.\n");
 
 		inputCalibration[0] *= in_width;
 		inputCalibration[2] *= in_width;
 		inputCalibration[1] *= in_height;
 		inputCalibration[3] *= in_height;
 
-		printf("auto-changing calibration file to fx=%f, fy=%f, cx=%f, cy=%f\n",
+		LOGD("auto-changing calibration file to fx=%f, fy=%f, cx=%f, cy=%f\n",
 			inputCalibration[0],
 			inputCalibration[1],
 			inputCalibration[2],
