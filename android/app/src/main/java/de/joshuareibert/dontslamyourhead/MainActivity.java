@@ -30,12 +30,14 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     }
 
     // native functions
+    public native void initSLAM();
     public native void updateSLAM(long matAddress);
     public native void resetSLAM();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initSLAM();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -135,7 +137,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             mCameraView = (CameraView) findViewById(R.id.cameraView);
             mCameraView.setVisibility(SurfaceView.VISIBLE);
             mCameraView.setCvCameraViewListener(this);
-            mCameraView.setResolution(mResolutionX, mResolutionY);
+            //mCameraView.setResolution(mResolutionX, mResolutionY);
         }
         mCameraView.enableView();
     }
