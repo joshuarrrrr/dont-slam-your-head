@@ -655,7 +655,7 @@ void SlamSystem::addTimingSamples()
 }
 
 
-void SlamSystem::debugDisplayDepthMap()
+cv::Mat SlamSystem::debugDisplayDepthMap()
 {
 
 
@@ -664,34 +664,35 @@ void SlamSystem::debugDisplayDepthMap()
 	if(currentKeyFrame != 0 && currentKeyFrame != 0)
 		scale = currentKeyFrame->getScaledCamToWorld().scale();
 	// debug plot depthmap
-	char buf1[200];
-	char buf2[200];
+	// char buf1[200];
+	// char buf2[200];
 
 
-	snprintf(buf1,200,"Map: Upd %3.0fms (%2.0fHz); Trk %3.0fms (%2.0fHz); %d / %d / %d",
-			map->msUpdate, map->nAvgUpdate,
-			msTrackFrame, nAvgTrackFrame,
-			currentKeyFrame->numFramesTrackedOnThis, currentKeyFrame->numMappedOnThis, (int)unmappedTrackedFrames.size());
+	// snprintf(buf1,200,"Map: Upd %3.0fms (%2.0fHz); Trk %3.0fms (%2.0fHz); %d / %d / %d",
+	// 		map->msUpdate, map->nAvgUpdate,
+	// 		msTrackFrame, nAvgTrackFrame,
+	// 		currentKeyFrame->numFramesTrackedOnThis, currentKeyFrame->numMappedOnThis, (int)unmappedTrackedFrames.size());
 
-	snprintf(buf2,200,"dens %2.0f%%; good %2.0f%%; scale %2.2f; res %2.1f/; usg %2.0f%%; Map: %d F, %d KF, %d E, %.1fm Pts",
-			100*currentKeyFrame->numPoints/(float)(width*height),
-			100*tracking_lastGoodPerBad,
-			scale,
-			tracking_lastResidual,
-			100*tracking_lastUsage,
-			(int)keyFrameGraph->allFramePoses.size(),
-			keyFrameGraph->totalVertices,
-			(int)keyFrameGraph->edgesAll.size(),
-			1e-6 * (float)keyFrameGraph->totalPoints);
+	// snprintf(buf2,200,"dens %2.0f%%; good %2.0f%%; scale %2.2f; res %2.1f/; usg %2.0f%%; Map: %d F, %d KF, %d E, %.1fm Pts",
+	// 		100*currentKeyFrame->numPoints/(float)(width*height),
+	// 		100*tracking_lastGoodPerBad,
+	// 		scale,
+	// 		tracking_lastResidual,
+	// 		100*tracking_lastUsage,
+	// 		(int)keyFrameGraph->allFramePoses.size(),
+	// 		keyFrameGraph->totalVertices,
+	// 		(int)keyFrameGraph->edgesAll.size(),
+	// 		1e-6 * (float)keyFrameGraph->totalPoints);
 
 
-	if(onSceenInfoDisplay)
-		printMessageOnCVImage(map->debugImageDepth, buf1, buf2);
+	// if(onSceenInfoDisplay)
+	// 	printMessageOnCVImage(map->debugImageDepth, buf1, buf2);
 	//if (displayDepthMap)
 	//	Util::displayImage( "DebugWindow DEPTH", map->debugImageDepth, false );
 
 	//int pressedKey = Util::waitKey(1);
 	//handleKey(pressedKey);
+	return map->debugImageDepth;
 }
 
 
