@@ -24,6 +24,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     private final int mResolutionY = 240;
     private Mat mRgba;
     private Mat mGray;
+    private Mat mDepth;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -31,7 +32,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     // native functions
     public native void initSLAM();
-    public native void updateSLAM(long matAddress);
+    public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress);
     public native void resetSLAM();
 
     @Override
@@ -117,6 +118,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     public void onCameraViewStarted(int width, int height) {
         mGray = new Mat();
         mRgba = new Mat();
+        mDepth = new Mat();
         mCameraView.setFixedFocus();
     }
 
@@ -129,8 +131,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-        updateSLAM(mGray.getNativeObjAddr());
-        return mGray;
+        updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
+        return mRgba;
     }
 
     private void initCameraView() {

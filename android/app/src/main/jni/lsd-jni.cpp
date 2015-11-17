@@ -7,7 +7,6 @@
 #include <lsd_slam/util/Undistorter.h>
 
 #define  LOG_TAG    "lsd-jni.cpp"
-
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
@@ -27,11 +26,15 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
-        JNIEnv* env, jobject thiz, jlong matAddress) {
-    cv::Mat& image = *(cv::Mat*)matAddress;
+        JNIEnv* env, jobject thiz,
+        jlong grayImgAddress, jlong rgbaImgAddress, jlong depthImgAddress)
+{
+    cv::Mat& image = *(cv::Mat*)grayImgAddress;
+    cv::Mat& out_image = *(cv::Mat*)rgbaImgAddress;
+    cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    slam->newImageCallback(undist_image, lsd_slam::Timestamp::now());
+    depth_image = slam->newImageCallback(undist_image, lsd_slam::Timestamp::now());
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
