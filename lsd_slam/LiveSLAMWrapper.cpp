@@ -106,7 +106,7 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 }*/
 
 
-void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, Timestamp imgTime)
+cv::Mat LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, Timestamp imgTime)
 {
 	++ imageSeqNumber;
 
@@ -125,6 +125,7 @@ void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, Timestamp imgTime
 	{
 		monoOdometry->trackFrame(grayImg.data,imageSeqNumber,false,imgTime.toSec());
 	}
+	return monoOdometry->debugDisplayDepthMap();
 }
 
 void LiveSLAMWrapper::logCameraPose(const SE3& camToWorld, double time)
