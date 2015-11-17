@@ -18,7 +18,7 @@ extern "C" {
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
         JNIEnv* env, jobject thiz) {
     undistorter = new lsd_slam::UndistorterOpenCV(
-            2836.04, 2836.04, 1631.5, 1223.5, 0.0781242, -0.0859657, 0, 0,
+            1100.66, 1100.66, 639.5, 359.5, 0.0737079, -0.0529861, 0, 0,
             1280, 720,
             "crop",
             320, 240);
