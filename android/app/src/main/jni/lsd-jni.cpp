@@ -6,6 +6,9 @@
 #include <lsd_slam/IOWrapper/Timestamp.h>
 #include <lsd_slam/util/Undistorter.h>
 
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+
 #define  LOG_TAG    "lsd-jni.cpp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
@@ -34,7 +37,14 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    depth_image = slam->newImageCallback(undist_image, lsd_slam::Timestamp::now());
+    slam->newImageCallback(undist_image, depth_image, lsd_slam::Timestamp::now());
+
+    // if there is a depth image, set is as output image
+    if (depth_image.type() > 0 && !depth_image.empty()) {
+        cv::Mat depth_image_rgba;
+        cv::resize(depth_image, depth_image_rgba, out_image.size());
+        cv::cvtColor(depth_image_rgba, out_image, CV_RGB2RGBA);
+    }
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
