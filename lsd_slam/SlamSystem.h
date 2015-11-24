@@ -108,7 +108,7 @@ public:
 
 	void publishKeyframeGraph();
 
-	cv::Mat debugDisplayDepthMap();
+	void debugDisplayDepthMap(cv::Mat& depthMap);
 
 	std::vector<FramePoseStruct*, Eigen::aligned_allocator<lsd_slam::FramePoseStruct*> > getAllPoses();
 

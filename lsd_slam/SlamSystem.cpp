@@ -655,11 +655,12 @@ void SlamSystem::addTimingSamples()
 }
 
 
-cv::Mat SlamSystem::debugDisplayDepthMap()
+void SlamSystem::debugDisplayDepthMap(cv::Mat& depthMap)
 {
 
-
-	map->debugPlotDepthMap();
+	if ((map->debugPlotDepthMap() == 1) && (!map->debugImageDepth.empty())) {
+		depthMap = map->debugImageDepth;
+	}
 	double scale = 1;
 	if(currentKeyFrame != 0 && currentKeyFrame != 0)
 		scale = currentKeyFrame->getScaledCamToWorld().scale();
@@ -692,7 +693,6 @@ cv::Mat SlamSystem::debugDisplayDepthMap()
 
 	//int pressedKey = Util::waitKey(1);
 	//handleKey(pressedKey);
-	return map->debugImageDepth;
 }
 
 
@@ -777,8 +777,8 @@ bool SlamSystem::doMappingIteration()
 			if(lastTrackingClosenessScore > 1)
 				changeKeyframe(true, false, lastTrackingClosenessScore * 0.75);
 
-			if (displayDepthMap || depthMapScreenshotFlag)
-				debugDisplayDepthMap();
+			// if (displayDepthMap || depthMapScreenshotFlag)
+			// 	debugDisplayDepthMap();
 
 			return false;
 		}
@@ -790,15 +790,15 @@ bool SlamSystem::doMappingIteration()
 			changeKeyframe(false, true, 1.0f);
 
 
-			if (displayDepthMap || depthMapScreenshotFlag)
-				debugDisplayDepthMap();
+			// if (displayDepthMap || depthMapScreenshotFlag)
+			// 	debugDisplayDepthMap();
 		}
 		else
 		{
 			bool didSomething = updateKeyframe();
 
-			if (displayDepthMap || depthMapScreenshotFlag)
-				debugDisplayDepthMap();
+			// if (displayDepthMap || depthMapScreenshotFlag)
+			// 	debugDisplayDepthMap();
 			if(!didSomething)
 				return false;
 		}
@@ -883,8 +883,8 @@ void SlamSystem::randomInit(uchar* image, double timeStamp, int id)
 	if(continuousPCOutput && outputWrapper != 0) outputWrapper->publishKeyframe(currentKeyFrame.get());
 
 
-	if (displayDepthMap || depthMapScreenshotFlag)
-		debugDisplayDepthMap();
+	// if (displayDepthMap || depthMapScreenshotFlag)
+	// 	debugDisplayDepthMap();
 
 
 	LOGD("Done Random initialization!\n");
@@ -995,10 +995,11 @@ void SlamSystem::trackFrame(uchar* image, unsigned int frameID, bool blockUntilM
 	{
 		outputWrapper->publishTrackedFrame(trackingNewFrame.get());
 	}
+	double scale = trackingNewFrame.get()->getScaledCamToWorld().scale();
 	SE3 const& pose = se3FromSim3(trackingNewFrame.get()->getScaledCamToWorld());
 	Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
 	Eigen::Vector3f trans = pose.translation().cast<float>();
-	LOGD("frame translation: %.2f, %.2f, %.2f\n", trans[0], trans[1], trans[2]);
+	LOGD("frame translation; scale: %.2f, %.2f, %.2f, %.2f\n", trans[0], trans[1], trans[2], scale);
 
 
 	// Keyframe selection
