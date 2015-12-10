@@ -16,9 +16,11 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Mat;
 
-public class MainActivity extends Activity implements CvCameraViewListener2 {
+import com.unity3d.player.UnityPlayerActivity;
 
-    private CameraView mCameraView;
+public class MainActivity extends UnityPlayerActivity { //implements CvCameraViewListener2 {
+
+    /*private CameraView mCameraView;
     private final int mCameraPermissionRequestCode = 0;
     private final int mResolutionX = 320;
     private final int mResolutionY = 240;
@@ -33,19 +35,21 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     // native functions
     public native void initSLAM();
     public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress);
-    public native void resetSLAM();
+    public native void resetSLAM();*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initSLAM();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        //initSLAM();
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //setContentView(R.layout.activity_main);
+        Toast.makeText(getApplicationContext(), "Don't SLAM your head!",
+                Toast.LENGTH_LONG).show();
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
@@ -143,5 +147,5 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             //mCameraView.setResolution(mResolutionX, mResolutionY);
         }
         mCameraView.enableView();
-    }
+    }*/
 }
