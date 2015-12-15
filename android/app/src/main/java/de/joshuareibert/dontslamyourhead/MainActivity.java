@@ -1,32 +1,38 @@
 package de.joshuareibert.dontslamyourhead;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.JavaCameraView;
 import org.opencv.core.Mat;
 
+import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
-public class MainActivity extends UnityPlayerActivity{ //implements CvCameraViewListener2 {
+public class MainActivity extends UnityPlayerActivity implements CvCameraViewListener2 {
 
-    //private CameraView mCameraView;
+    private CameraView mCameraView;
     private final int mCameraPermissionRequestCode = 0;
     private final int mResolutionX = 320;
     private final int mResolutionY = 240;
-    //private Mat mRgba;
-    //private Mat mGray;
-    //private Mat mDepth;
+    private Mat mRgba;
+    private Mat mGray;
+    private Mat mDepth;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -49,29 +55,29 @@ public class MainActivity extends UnityPlayerActivity{ //implements CvCameraView
                 Toast.LENGTH_LONG).show();
     }
 
-    /*@Override
+    @Override
     public void onResume() {
         super.onResume();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     mCameraPermissionRequestCode);
-        } else
-            initCameraView();
-    }*/
+        } else*/
+        initCameraView();
+    }
 
     @Override
     public void onPause() {
         super.onPause();
-        //if (mCameraView != null)
-        //    mCameraView.disableView();
+        if (mCameraView != null)
+            mCameraView.disableView();
     }
 
     public void onDestroy() {
         super.onDestroy();
-        //if (mCameraView != null)
-        //    mCameraView.disableView();
+        if (mCameraView != null)
+            mCameraView.disableView();
     }
 
     /*@Override
@@ -119,7 +125,7 @@ public class MainActivity extends UnityPlayerActivity{ //implements CvCameraView
         }
     }*/
 
-    /*public void onCameraViewStarted(int width, int height) {
+    public void onCameraViewStarted(int width, int height) {
         mGray = new Mat();
         mRgba = new Mat();
         mDepth = new Mat();
@@ -135,17 +141,21 @@ public class MainActivity extends UnityPlayerActivity{ //implements CvCameraView
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-        //updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
+        updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
         return mRgba;
-    }*/
+    }
 
     private void initCameraView() {
-        /*if (mCameraView == null) {
-            mCameraView = (CameraView) findViewById(R.id.cameraView);
+        if (mCameraView == null) {
+            //mCameraView = (CameraView) findViewById(R.id.cameraView);
+            mCameraView = new CameraView(getApplicationContext(), 0);
             mCameraView.setVisibility(SurfaceView.VISIBLE);
             mCameraView.setCvCameraViewListener(this);
             //mCameraView.setResolution(mResolutionX, mResolutionY);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            UnityPlayer.currentActivity.addContentView(mCameraView, layoutParams);
         }
-        mCameraView.enableView();*/
+        mCameraView.enableView();
     }
 }
