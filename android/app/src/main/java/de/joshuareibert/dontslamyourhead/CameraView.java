@@ -9,6 +9,9 @@ import org.opencv.android.JavaCameraView;
 import java.util.List;
 
 public class CameraView extends JavaCameraView {
+    public CameraView(Context context, int cameraId) {
+        super(context, cameraId);
+    }
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
