@@ -18,15 +18,15 @@ import org.opencv.core.Mat;
 
 import com.unity3d.player.UnityPlayerActivity;
 
-public class MainActivity extends UnityPlayerActivity { //implements CvCameraViewListener2 {
+public class MainActivity extends UnityPlayerActivity{ //implements CvCameraViewListener2 {
 
-    /*private CameraView mCameraView;
+    //private CameraView mCameraView;
     private final int mCameraPermissionRequestCode = 0;
     private final int mResolutionX = 320;
     private final int mResolutionY = 240;
-    private Mat mRgba;
-    private Mat mGray;
-    private Mat mDepth;
+    //private Mat mRgba;
+    //private Mat mGray;
+    //private Mat mDepth;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -35,12 +35,12 @@ public class MainActivity extends UnityPlayerActivity { //implements CvCameraVie
     // native functions
     public native void initSLAM();
     public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress);
-    public native void resetSLAM();*/
+    public native void resetSLAM();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //initSLAM();
+        initSLAM();
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -59,22 +59,22 @@ public class MainActivity extends UnityPlayerActivity { //implements CvCameraVie
                     mCameraPermissionRequestCode);
         } else
             initCameraView();
-    }
+    }*/
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mCameraView != null)
-            mCameraView.disableView();
+        //if (mCameraView != null)
+        //    mCameraView.disableView();
     }
 
     public void onDestroy() {
         super.onDestroy();
-        if (mCameraView != null)
-            mCameraView.disableView();
+        //if (mCameraView != null)
+        //    mCameraView.disableView();
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -90,14 +90,14 @@ public class MainActivity extends UnityPlayerActivity { //implements CvCameraVie
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_reset) {
-            resetSLAM();
+            //resetSLAM();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -117,9 +117,9 @@ public class MainActivity extends UnityPlayerActivity { //implements CvCameraVie
                 break;
             }
         }
-    }
+    }*/
 
-    public void onCameraViewStarted(int width, int height) {
+    /*public void onCameraViewStarted(int width, int height) {
         mGray = new Mat();
         mRgba = new Mat();
         mDepth = new Mat();
@@ -135,17 +135,17 @@ public class MainActivity extends UnityPlayerActivity { //implements CvCameraVie
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-        updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
+        //updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
         return mRgba;
-    }
+    }*/
 
     private void initCameraView() {
-        if (mCameraView == null) {
+        /*if (mCameraView == null) {
             mCameraView = (CameraView) findViewById(R.id.cameraView);
             mCameraView.setVisibility(SurfaceView.VISIBLE);
             mCameraView.setCvCameraViewListener(this);
             //mCameraView.setResolution(mResolutionX, mResolutionY);
         }
-        mCameraView.enableView();
-    }*/
+        mCameraView.enableView();*/
+    }
 }
