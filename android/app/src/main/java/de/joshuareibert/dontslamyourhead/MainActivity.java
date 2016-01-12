@@ -87,6 +87,18 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         translation[2] = z;
     }
 
+    public float getTranslationX() {
+        return translation[0];
+    }
+
+    public float getTranslationY() {
+        return translation[1];
+    }
+
+    public float getTranslationZ() {
+        return translation[2];
+    }
+
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
