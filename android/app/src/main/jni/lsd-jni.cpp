@@ -37,7 +37,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    slam->newImageCallback(undist_image, depth_image, lsd_slam::Timestamp::now());
+    SE3 pose = slam->newImageCallback(undist_image, depth_image, lsd_slam::Timestamp::now());
 
     // if there is a depth image, set is as output image
     if (depth_image.type() > 0 && !depth_image.empty()) {
@@ -45,6 +45,20 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         cv::resize(depth_image, depth_image_rgba, out_image.size());
         cv::cvtColor(depth_image_rgba, out_image, CV_RGB2RGBA);
     }
+
+    Eigen::Vector3f trans = pose.translation().cast<float>();
+
+    jclass activity = env->FindClass("de/joshuareibert/dontslamyourhead/MainActivity");
+    if (activity == NULL) {
+        LOGE("activity class not found!");
+        return;
+    }
+    jmethodID trans_setter = env->GetMethodID(activity, "setTranslation", "(FFF)V");
+    if (trans_setter == NULL) {
+        LOGE("setTranslation method not found!");
+        return;
+    }
+    env->CallObjectMethod(thiz, trans_setter, trans[0], trans[1], trans[2]);
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(

@@ -995,12 +995,6 @@ void SlamSystem::trackFrame(uchar* image, unsigned int frameID, bool blockUntilM
 	{
 		outputWrapper->publishTrackedFrame(trackingNewFrame.get());
 	}
-	double scale = trackingNewFrame.get()->getScaledCamToWorld().scale();
-	SE3 const& pose = se3FromSim3(trackingNewFrame.get()->getScaledCamToWorld());
-	Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
-	Eigen::Vector3f trans = pose.translation().cast<float>();
-	LOGD("frame translation; scale: %.2f, %.2f, %.2f, %.2f\n", trans[0], trans[1], trans[2], scale);
-
 
 	// Keyframe selection
 	latestTrackedFrame = trackingNewFrame;

@@ -33,6 +33,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private Mat mRgba;
     private Mat mGray;
     private Mat mDepth;
+    private float translation[] = {0.0f, 0.0f, 0.0f};
 
     static {
         System.loadLibrary("lsd-jni");
@@ -78,6 +79,12 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         super.onDestroy();
         if (mCameraView != null)
             mCameraView.disableView();
+    }
+
+    public void setTranslation(float x, float y, float z) {
+        translation[0] = x;
+        translation[1] = y;
+        translation[2] = z;
     }
 
     /*@Override
@@ -142,6 +149,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
         updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
+        System.out.println("translation from activity: " + String.valueOf(translation[0]) + ", " + String.valueOf(translation[1]) + ", " + String.valueOf(translation[2]));
         return mRgba;
     }
 

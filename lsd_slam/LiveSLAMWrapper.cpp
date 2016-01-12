@@ -106,7 +106,7 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 }*/
 
 
-void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, cv::Mat& depthImage, Timestamp imgTime)
+SE3 LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, cv::Mat& depthImage, Timestamp imgTime)
 {
 	++ imageSeqNumber;
 
@@ -126,6 +126,7 @@ void LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, cv::Mat& depthIma
 		monoOdometry->trackFrame(grayImg.data,imageSeqNumber,false,imgTime.toSec());
 		monoOdometry->debugDisplayDepthMap(depthImage);
 	}
+	return monoOdometry->getCurrentPoseEstimate();
 }
 
 void LiveSLAMWrapper::logCameraPose(const SE3& camToWorld, double time)
