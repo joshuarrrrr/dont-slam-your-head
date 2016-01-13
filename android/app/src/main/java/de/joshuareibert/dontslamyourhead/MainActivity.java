@@ -161,7 +161,6 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
         updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
-        System.out.println("translation from activity: " + String.valueOf(translation[0]) + ", " + String.valueOf(translation[1]) + ", " + String.valueOf(translation[2]));
         return mRgba;
     }
 
