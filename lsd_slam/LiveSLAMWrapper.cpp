@@ -108,6 +108,12 @@ LiveSLAMWrapper::~LiveSLAMWrapper()
 
 SE3 LiveSLAMWrapper::newImageCallback(const cv::Mat& grayImg, cv::Mat& depthImage, Timestamp imgTime)
 {
+	if (fullResetRequested) {
+		resetAll();
+		fullResetRequested = false;
+		return SE3();
+	}
+
 	++ imageSeqNumber;
 
 	// Assert that we work with 8 bit images

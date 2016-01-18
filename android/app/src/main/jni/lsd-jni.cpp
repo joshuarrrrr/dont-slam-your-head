@@ -70,6 +70,6 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
         JNIEnv* env, jobject thiz) {
-    slam->resetAll();
+    slam->requestReset();
 }
 }
