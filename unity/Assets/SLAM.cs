@@ -4,6 +4,8 @@ using System.Collections;
 public class SLAM : MonoBehaviour {
 
 	private Vector3 startPosition;
+	private Quaternion startRotation;
+
 	private float lastResetTime = 0.0F;
 	private float resetTimeout = 1.0F;
 
@@ -11,6 +13,7 @@ public class SLAM : MonoBehaviour {
 	void Start () {
 		Transform transform = GetComponent<Transform>();
 		startPosition = transform.position;
+		startRotation = transform.rotation;
 	}
 
 	// Update is called once per frame
@@ -47,6 +50,8 @@ public class SLAM : MonoBehaviour {
 	public void Reset() {
 		MainActivity.activityObj.Call("resetSLAM");
 		lastResetTime = Time.time;
+		transform.position = startPosition;
+		transform.rotation = startRotation;
 		Debug.Log("RESET");
 	}
 }
