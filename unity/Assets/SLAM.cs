@@ -4,6 +4,8 @@ using System.Collections;
 public class SLAM : MonoBehaviour {
 
 	private Vector3 startPosition;
+	private float lastResetTime = 0.0F;
+	private float resetTimeout = 1.0F;
 
 	// Use this for initialization
 	void Start () {
@@ -27,10 +29,24 @@ public class SLAM : MonoBehaviour {
 			);
 		transform.rotation = quat;
 		// Debug.Log(transform.position);
+
+		if ((getTouchCount() >= 3) && (Time.time >= lastResetTime + resetTimeout)) {
+			this.Reset();
+		}
+	}
+
+	int getTouchCount() {
+		int count = 0;
+        foreach (Touch touch in Input.touches) {
+            if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
+                count++;
+        }
+        return count;
 	}
 
 	public void Reset() {
 		MainActivity.activityObj.Call("resetSLAM");
+		lastResetTime = Time.time;
 		Debug.Log("RESET");
 	}
 }
