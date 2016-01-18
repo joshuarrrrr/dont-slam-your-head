@@ -34,6 +34,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private Mat mGray;
     private Mat mDepth;
     private float translation[] = {0.0f, 0.0f, 0.0f};
+    private float rotation[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
     static {
         System.loadLibrary("lsd-jni");
@@ -85,6 +86,14 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         translation[0] = x;
         translation[1] = y;
         translation[2] = z;
+    }
+
+    public void setRotation(float x, float y, float z, float w) {
+        rotation[0] = x;
+        rotation[1] = y;
+        rotation[2] = z;
+        rotation[3] = w;
+        System.out.println("ROTATION SET to " + String.valueOf(x) + ", " + String.valueOf(y) + ", " + String.valueOf(z) + ", " + String.valueOf(w));
     }
 
     public float getTranslationX() {

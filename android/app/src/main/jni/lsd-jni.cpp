@@ -47,6 +47,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     }
 
     Eigen::Vector3f trans = pose.translation().cast<float>();
+    Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
 
     jclass activity = env->FindClass("de/joshuareibert/dontslamyourhead/MainActivity");
     if (activity == NULL) {
@@ -58,7 +59,13 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         LOGE("setTranslation method not found!");
         return;
     }
+    jmethodID rot_setter = env->GetMethodID(activity, "setRotation", "(FFFF)V");
+    if (rot_setter == NULL) {
+        LOGE("setRotation method not found!");
+        return;
+    }
     env->CallObjectMethod(thiz, trans_setter, trans[0], trans[1], trans[2]);
+    env->CallObjectMethod(thiz, rot_setter, quat.x(), quat.y(), quat.z(), quat.w());
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
