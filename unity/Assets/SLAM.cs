@@ -13,14 +13,13 @@ public class SLAM : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		AndroidJavaObject activityObj = MainActivity.activityObj;
 		Vector3 trackingPosition = new Vector3(
-			activityObj.Call<float>("getTranslationX"),
-			activityObj.Call<float>("getTranslationY"),
-			activityObj.Call<float>("getTranslationZ")
+			MainActivity.activityObj.Call<float>("getTranslationX"),
+			MainActivity.activityObj.Call<float>("getTranslationY"),
+			MainActivity.activityObj.Call<float>("getTranslationZ")
 			);
 		transform.position = startPosition + trackingPosition;
-		Debug.Log(transform.position);
+		// Debug.Log(transform.position);
 	}
 
 	public void Reset() {
