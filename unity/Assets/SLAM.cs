@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tracking : MonoBehaviour {
+public class SLAM : MonoBehaviour {
 
 	private Vector3 startPosition;
 
@@ -21,5 +21,10 @@ public class Tracking : MonoBehaviour {
 			);
 		transform.position = startPosition + trackingPosition;
 		Debug.Log(transform.position);
+	}
+
+	public void Reset() {
+		MainActivity.activityObj.Call("resetSLAM");
+		Debug.Log("RESET");
 	}
 }
