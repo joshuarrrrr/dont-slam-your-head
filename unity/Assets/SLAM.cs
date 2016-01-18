@@ -19,6 +19,13 @@ public class SLAM : MonoBehaviour {
 			MainActivity.activityObj.Call<float>("getTranslationZ")
 			);
 		transform.position = startPosition + trackingPosition;
+		Quaternion quat = new Quaternion(
+			MainActivity.activityObj.Call<float>("getRotationX"),
+			MainActivity.activityObj.Call<float>("getRotationY"),
+			MainActivity.activityObj.Call<float>("getRotationZ"),
+			MainActivity.activityObj.Call<float>("getRotationW")
+			);
+		transform.rotation = quat;
 		// Debug.Log(transform.position);
 	}
 
