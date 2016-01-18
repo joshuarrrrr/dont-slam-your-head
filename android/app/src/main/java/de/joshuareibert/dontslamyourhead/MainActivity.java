@@ -93,7 +93,6 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         rotation[1] = y;
         rotation[2] = z;
         rotation[3] = w;
-        System.out.println("ROTATION SET to " + String.valueOf(x) + ", " + String.valueOf(y) + ", " + String.valueOf(z) + ", " + String.valueOf(w));
     }
 
     public float getTranslationX() {
