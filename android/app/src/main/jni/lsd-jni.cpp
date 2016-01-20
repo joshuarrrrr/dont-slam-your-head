@@ -1,6 +1,8 @@
 
 #include <android/log.h>
 #include <jni.h>
+#include <sstream>
+#include <ctime>
 
 #include <lsd_slam/LiveSLAMWrapper.h>
 #include <lsd_slam/IOWrapper/Timestamp.h>
@@ -8,6 +10,7 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
 #define  LOG_TAG    "lsd-jni.cpp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -15,6 +18,7 @@
 
 static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
+static int frameCount = 0;
 
 
 extern "C" {
@@ -38,6 +42,27 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
     SE3 pose = slam->newImageCallback(undist_image, depth_image, lsd_slam::Timestamp::now());
+
+    #ifdef STORE_DEBUG_IMAGES
+    ++frameCount;
+    if (frameCount % 50 == 0) {
+        std::ostringstream ss;
+        ss << frameCount;
+        std::time_t rawtime;
+        std::tm* timeinfo;
+        char buffer [80];
+
+        std::time(&rawtime);
+        timeinfo = std::localtime(&rawtime);
+
+        std::strftime(buffer,80,"%Y%m%d%H%M%S",timeinfo);
+        std::string datestr(buffer, 14);
+        std::string filename = "/sdcard/lsdslam/image" + datestr;
+        cv::imwrite(filename + "_distorted.png", image);
+        cv::imwrite(filename + "_undistorted.png", undist_image);
+        LOGD("stored frame#%d on disk", frameCount);
+    }
+    #endif
 
     // if there is a depth image, set is as output image
     if (depth_image.type() > 0 && !depth_image.empty()) {
