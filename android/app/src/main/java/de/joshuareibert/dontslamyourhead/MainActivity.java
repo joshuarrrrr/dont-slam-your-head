@@ -28,8 +28,6 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
 
     private CameraView mCameraView;
     private final int mCameraPermissionRequestCode = 0;
-    private final int mResolutionX = 320;
-    private final int mResolutionY = 240;
     private Mat mRgba;
     private Mat mGray;
     private Mat mDepth;
@@ -194,7 +192,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
             mCameraView = new CameraView(getApplicationContext(), 0);
             mCameraView.setVisibility(SurfaceView.VISIBLE);
             mCameraView.setCvCameraViewListener(this);
-            //mCameraView.setResolution(mResolutionX, mResolutionY);
+            mCameraView.setResolution(1280, 720);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             UnityPlayer.currentActivity.addContentView(mCameraView, layoutParams);
