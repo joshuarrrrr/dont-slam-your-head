@@ -126,6 +126,10 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         return rotation[3];
     }
 
+    public float[] getDepth() {
+        return depth;
+    }
+
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
