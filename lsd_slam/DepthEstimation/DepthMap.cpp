@@ -1428,6 +1428,23 @@ int DepthMap::debugPlotDepthMap()
 }
 
 
+float DepthMap::getDepthValue(int x, int y) const {
+	int idx = x + y*width;
+	if (!currentDepthMap[idx].isValid)
+		return -1.0f;
+	else
+		return currentDepthMap[idx].idepth_smoothed;
+}
+
+float DepthMap::getDepthVariance(int x, int y) const {
+	int idx = x + y*width;
+	if (!currentDepthMap[idx].isValid)
+		return -1.0f;
+	else
+		return currentDepthMap[idx].idepth_var_smoothed;
+}
+
+
 
 
 // find pixel in image (do stereo along epipolar line).

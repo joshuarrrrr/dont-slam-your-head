@@ -2,7 +2,7 @@
 * This file is part of LSD-SLAM.
 *
 * Copyright 2013 Jakob Engel <engelj at in dot tum dot de> (Technical University of Munich)
-* For more information see <http://vision.in.tum.de/lsdslam> 
+* For more information see <http://vision.in.tum.de/lsdslam>
 *
 * LSD-SLAM is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public:
 
 	/** Resets everything. */
 	void reset();
-	
+
 	/**
 	 * does obervation and regularization only.
 	 **/
@@ -61,7 +61,7 @@ public:
 	 * does propagation and whole-filling-regularization (no observation, for that need to call updateKeyframe()!)
 	 **/
 	void createKeyFrame(Frame* new_keyframe);
-	
+
 	/**
 	 * does one fill holes iteration
 	 */
@@ -71,6 +71,8 @@ public:
 	inline bool isValid() {return activeKeyFrame!=0;};
 
 	int debugPlotDepthMap();
+	float getDepthValue(int x, int y) const;
+	float getDepthVariance(int x, int y) const;
 
 	// ONLY for debugging, their memory is managed (created & deleted) by this object.
 	cv::Mat debugImageHypothesisHandling;
@@ -124,7 +126,7 @@ private:
 	DepthMapPixelHypothesis* currentDepthMap;
 	int* validityIntegralBuffer;
 
-	
+
 
 	// ============ internal functions ==================================================
 	// does the line-stereo seeking.
@@ -138,7 +140,7 @@ private:
 
 
 	void propagateDepth(Frame* new_keyframe);
-	
+
 
 	void observeDepth();
 	void observeDepthRow(int yMin, int yMax, RunningStats* stats);
