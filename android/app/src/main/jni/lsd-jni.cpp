@@ -16,6 +16,8 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
+//#define STORE_DEBUG_IMAGES
+
 static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
 static int frameCount = 0;
@@ -60,6 +62,8 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         std::string filename = "/sdcard/lsdslam/image" + datestr;
         cv::imwrite(filename + "_distorted.png", image);
         cv::imwrite(filename + "_undistorted.png", undist_image);
+        if (depth_image.type() > 0 && !depth_image.empty())
+            cv::imwrite(filename + "_depth.png", depth_image);
         LOGD("stored frame#%d on disk", frameCount);
     }
     #endif
