@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class DepthTexture : MonoBehaviour {
@@ -6,10 +7,10 @@ public class DepthTexture : MonoBehaviour {
 	private int width = 320;
 	private int height = 240;
 
-	private Texture2D texture;
+	private Texture2D depthMap;
 
 	void Start () {
-		texture = new Texture2D(width, height, TextureFormat.ARGB32, false);
+		depthMap = new Texture2D(width, height, TextureFormat.ARGB32, false);
 	}
 
 	void Update() {
@@ -22,18 +23,18 @@ public class DepthTexture : MonoBehaviour {
 			for (int x = 0; x < width; ++x) {
 				int idx = x + y * width;
 				if (depth[idx] == -1.0) {
-					texture.SetPixel(x, y, Color.clear);
+					depthMap.SetPixel(x, height - y, Color.black);
 				} else {
 					float val = Mathf.Clamp01((depth[idx] - min) / (max - min));
 					Color color = new Color(val, val, val, 1.0F);
-					texture.SetPixel(x, y, color);
+					depthMap.SetPixel(x, height - y, color);
 				}
 			}
 
 		// Apply all SetPixel calls
-		texture.Apply();
+		depthMap.Apply();
 
 		// connect texture to material of GameObject this script is attached to
-		GetComponent<Renderer>().material.mainTexture = texture;
+		GetComponent<RawImage>().texture = depthMap;
 	}
 }
