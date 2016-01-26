@@ -30,7 +30,7 @@ public class SLAM : MonoBehaviour {
 			MainActivity.activityObj.Call<float>("getRotationZ"),
 			MainActivity.activityObj.Call<float>("getRotationW")
 			);
-		transform.rotation = quat;
+		// transform.rotation = quat;
 		// Debug.Log(transform.position);
 
 		if ((getTouchCount() >= 3) && (Time.time >= lastResetTime + resetTimeout)) {
