@@ -695,6 +695,14 @@ void SlamSystem::debugDisplayDepthMap(cv::Mat& depthMap)
 	//handleKey(pressedKey);
 }
 
+void SlamSystem::getDepthMap(float* depthMap) {
+	for (int y = 0; y < height; ++y)
+		for (int x = 0; x < width; ++x) {
+			int idx = x + y * width;
+				depthMap[idx] = map->getDepthValue(x, y);
+		}
+}
+
 
 void SlamSystem::takeRelocalizeResult()
 {
