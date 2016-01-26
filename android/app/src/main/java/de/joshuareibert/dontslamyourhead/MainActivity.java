@@ -32,22 +32,26 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private Mat mRgba;
     private Mat mGray;
     private Mat mDepth;
+    private int width = 320;
+    private int height = 240;
     private float translation[] = {0.0f, 0.0f, 0.0f};
     private float rotation[] = {0.0f, 0.0f, 0.0f, 0.0f};
+    private float depth[] = null;
 
     static {
         System.loadLibrary("lsd-jni");
     }
 
     // native functions
-    public native void initSLAM();
-    public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress);
+    public native void initSLAM(int width, int height);
+    public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress, float[] depthMap);
     public native void resetSLAM();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initSLAM();
+        initSLAM(width, height);
+        depth = new float[width * height];
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -183,7 +187,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-        updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr());
+        updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr(),
+                depth);
         return mRgba;
     }
 

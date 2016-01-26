@@ -21,29 +21,38 @@
 static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
 static int frameCount = 0;
+static float* depthMap = nullptr;
+static int width = 0;
+static int height = 0;
 
 
 extern "C" {
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
-        JNIEnv* env, jobject thiz) {
+        JNIEnv* env, jobject thiz,
+        int w, int h) {
+    width = w;
+    height = h;
     undistorter = new lsd_slam::UndistorterOpenCV(
             1100.66, 1100.66, 639.5, 359.5, 0.0737079, -0.0529861, 0, 0,
             1280, 720,
             "crop",
-            320, 240);
+            width, height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
+    depthMap = new float[width * height];
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         JNIEnv* env, jobject thiz,
-        jlong grayImgAddress, jlong rgbaImgAddress, jlong depthImgAddress)
+        jlong grayImgAddress, jlong rgbaImgAddress, jlong depthImgAddress,
+        jfloatArray jDepthMap)
 {
     cv::Mat& image = *(cv::Mat*)grayImgAddress;
     cv::Mat& out_image = *(cv::Mat*)rgbaImgAddress;
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    SE3 pose = slam->newImageCallback(undist_image, depth_image, lsd_slam::Timestamp::now());
+    SE3 pose = slam->newImageCallback(undist_image, depthMap, lsd_slam::Timestamp::now());
+    env->SetFloatArrayRegion(jDepthMap, 0, width * height, depthMap);
 
     #ifdef STORE_DEBUG_IMAGES
     ++frameCount;
@@ -62,18 +71,18 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         std::string filename = "/sdcard/lsdslam/image" + datestr;
         cv::imwrite(filename + "_distorted.png", image);
         cv::imwrite(filename + "_undistorted.png", undist_image);
-        if (depth_image.type() > 0 && !depth_image.empty())
-            cv::imwrite(filename + "_depth.png", depth_image);
+        //if (depth_image.type() > 0 && !depth_image.empty())
+        //    cv::imwrite(filename + "_depth.png", depth_image);
         LOGD("stored frame#%d on disk", frameCount);
     }
     #endif
 
     // if there is a depth image, set is as output image
-    if (depth_image.type() > 0 && !depth_image.empty()) {
-        cv::Mat depth_image_rgba;
-        cv::resize(depth_image, depth_image_rgba, out_image.size());
-        cv::cvtColor(depth_image_rgba, out_image, CV_RGB2RGBA);
-    }
+    //if (depth_image.type() > 0 && !depth_image.empty()) {
+    //    cv::Mat depth_image_rgba;
+    //    cv::resize(depth_image, depth_image_rgba, out_image.size());
+    //    cv::cvtColor(depth_image_rgba, out_image, CV_RGB2RGBA);
+    //}
 
     Eigen::Vector3f trans = pose.translation().cast<float>();
     Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
