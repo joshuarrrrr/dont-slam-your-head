@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -51,8 +52,6 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), "Don't SLAM your head!",
-                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -84,6 +83,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         translation[0] = x;
         translation[1] = y;
         translation[2] = z;
+        Log.d("DSYH_TRANSLATION",
+                String.valueOf(x) + ", " + String.valueOf(y) + ", " + String.valueOf(z));
     }
 
     public void setRotation(float x, float y, float z, float w) {
