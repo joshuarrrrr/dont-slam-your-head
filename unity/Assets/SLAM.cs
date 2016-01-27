@@ -6,8 +6,8 @@ public class SLAM : MonoBehaviour {
 	private Vector3 startPosition;
 	private Quaternion startRotation;
 
-	private bool useTrackingPosition = false;
-	private bool useTrackingRotation = false;
+	public bool TrackPosition = true;
+	public bool TrackRotation = true;
 
 	private float lastResetTime = 0.0F;
 	private float resetTimeout = 1.0F;
@@ -21,7 +21,7 @@ public class SLAM : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (useTrackingPosition) {
+		if (TrackPosition) {
 			Vector3 trackingPosition = new Vector3(
 				MainActivity.activityObj.Call<float>("getTranslationX"),
 				MainActivity.activityObj.Call<float>("getTranslationY"),
@@ -29,7 +29,7 @@ public class SLAM : MonoBehaviour {
 				);
 			transform.position = startPosition + trackingPosition;
 		}
-		if (useTrackingRotation) {
+		if (TrackRotation) {
 			Quaternion quat = new Quaternion(
 				MainActivity.activityObj.Call<float>("getRotationX"),
 				MainActivity.activityObj.Call<float>("getRotationY"),

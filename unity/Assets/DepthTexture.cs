@@ -4,8 +4,8 @@ using System.Collections;
 
 public class DepthTexture : MonoBehaviour {
 
-	private int width = 320;
-	private int height = 240;
+	public int width = 320;
+	public int height = 240;
 
 	private Texture2D depthMap;
 
