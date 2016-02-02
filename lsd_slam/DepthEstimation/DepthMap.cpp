@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "util/settings.h"
@@ -1439,7 +1440,7 @@ float DepthMap::getDepthValue(int x, int y) const {
 float DepthMap::getDepthVariance(int x, int y) const {
 	int idx = x + y*width;
 	if (!currentDepthMap[idx].isValid)
-		return -1.0f;
+		return std::numeric_limits<float>::max();
 	else
 		return currentDepthMap[idx].idepth_var;
 }
