@@ -3,6 +3,9 @@
 #include <jni.h>
 #include <sstream>
 #include <ctime>
+#include <queue>
+#include <vector>
+#include <functional>
 
 #include <lsd_slam/LiveSLAMWrapper.h>
 #include <lsd_slam/IOWrapper/Timestamp.h>
@@ -25,6 +28,40 @@ static float* depthMap = nullptr;
 static float* depthVar = nullptr;
 static int width = 0;
 static int height = 0;
+static float fx = 1100.66f;
+static float fy = 1100.66f;
+static float cx = 639.5f;
+static float cy = 359.5f;
+static float fxi;
+static float fyi;
+static float cxi;
+static float cyi;
+static int numPoints = 100;
+static std::vector<Eigen::Vector3f> points;
+
+
+void getBestPoints() {
+    typedef std::pair<float, int> P;
+    std::priority_queue<P, std::vector<P>, std::greater<P>> q;
+    for (int i = 0; i < width * height; ++i) {
+        q.push(std::pair<float, int>(depthVar[i], i));
+    }
+    for (int i = 0; i < numPoints; ++i) {
+        int idx = q.top().second;
+        int x = idx % width;
+        int y = idx / height;
+        float depth = 1 / depthMap[idx];
+        Eigen::Vector3f pos = Eigen::Vector3f(x * fxi + cxi, y * fyi + cyi, 1.0f) * depth;
+        points[i] = pos;
+
+        // debug log of five points with lowest variance, TODO remove
+        if (i < 5) {
+            LOGD("%d: index[%d] = %f => (%.3f, %.3f, %.3f)", i, idx, depthVar[idx],
+                 pos.x(), pos.y(), pos.z());
+        }
+        q.pop();
+    }
+}
 
 
 extern "C" {
@@ -33,14 +70,19 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
         int w, int h) {
     width = w;
     height = h;
+    fxi = 1 / fx;
+    fyi = 1 / fy;
+    cxi = -cx / fx;
+    cyi = -cy / fy;
     undistorter = new lsd_slam::UndistorterOpenCV(
-            1100.66, 1100.66, 639.5, 359.5, 0.0737079, -0.0529861, 0, 0,
+            fx, fy, cx, cy, 0.0737079, -0.0529861, 0, 0,
             1280, 720,
             "crop",
             width, height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
     depthMap = new float[width * height];
     depthVar = new float[width * height];
+    points = std::vector<Eigen::Vector3f>(numPoints);
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
@@ -55,6 +97,8 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     undistorter->undistort(image, undist_image);
     SE3 pose = slam->newImageCallback(undist_image, depthMap, depthVar, lsd_slam::Timestamp::now());
     env->SetFloatArrayRegion(jDepthMap, 0, width * height, depthMap);
+
+    getBestPoints();
 
     #ifdef STORE_DEBUG_IMAGES
     ++frameCount;
