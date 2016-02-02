@@ -22,6 +22,7 @@ static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
 static int frameCount = 0;
 static float* depthMap = nullptr;
+static float* depthVar = nullptr;
 static int width = 0;
 static int height = 0;
 
@@ -39,6 +40,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
             width, height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
     depthMap = new float[width * height];
+    depthVar = new float[width * height];
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
@@ -51,7 +53,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    SE3 pose = slam->newImageCallback(undist_image, depthMap, lsd_slam::Timestamp::now());
+    SE3 pose = slam->newImageCallback(undist_image, depthMap, depthVar, lsd_slam::Timestamp::now());
     env->SetFloatArrayRegion(jDepthMap, 0, width * height, depthMap);
 
     #ifdef STORE_DEBUG_IMAGES
