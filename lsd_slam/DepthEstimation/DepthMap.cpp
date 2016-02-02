@@ -1433,7 +1433,7 @@ float DepthMap::getDepthValue(int x, int y) const {
 	if (!currentDepthMap[idx].isValid)
 		return -1.0f;
 	else
-		return currentDepthMap[idx].idepth_smoothed;
+		return currentDepthMap[idx].idepth;
 }
 
 float DepthMap::getDepthVariance(int x, int y) const {
@@ -1441,7 +1441,7 @@ float DepthMap::getDepthVariance(int x, int y) const {
 	if (!currentDepthMap[idx].isValid)
 		return -1.0f;
 	else
-		return currentDepthMap[idx].idepth_var_smoothed;
+		return currentDepthMap[idx].idepth_var;
 }
 
 
