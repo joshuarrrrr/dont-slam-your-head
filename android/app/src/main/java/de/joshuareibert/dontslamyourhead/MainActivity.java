@@ -36,7 +36,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private int height = 240;
     private float translation[] = {0.0f, 0.0f, 0.0f};
     private float rotation[] = {0.0f, 0.0f, 0.0f, 0.0f};
-    private float depth[] = null;
+    private float idepth[] = null;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -51,7 +51,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initSLAM(width, height);
-        depth = new float[width * height];
+        idepth = new float[width * height];
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -126,8 +126,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         return rotation[3];
     }
 
-    public float[] getDepth() {
-        return depth;
+    public float[] getIDepth() {
+        return idepth;
     }
 
     /*@Override
@@ -192,7 +192,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
         updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr(),
-                depth);
+                idepth);
         return mRgba;
     }
 

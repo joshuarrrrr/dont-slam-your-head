@@ -24,8 +24,8 @@
 static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
 static int frameCount = 0;
-static float* depthMap = nullptr;
-static float* depthVar = nullptr;
+static float* idepthMap = nullptr;
+static float* idepthVar = nullptr;
 static int width = 0;
 static int height = 0;
 static float fx = 1100.66f;
@@ -44,19 +44,19 @@ void getBestPoints() {
     typedef std::pair<float, int> P;
     std::priority_queue<P, std::vector<P>, std::greater<P>> q;
     for (int i = 0; i < width * height; ++i) {
-        q.push(std::pair<float, int>(depthVar[i], i));
+        q.push(std::pair<float, int>(idepthVar[i], i));
     }
     for (int i = 0; i < numPoints; ++i) {
         int idx = q.top().second;
         int x = idx % width;
         int y = idx / height;
-        float depth = 1 / depthMap[idx];
+        float depth = 1 / idepthMap[idx];
         Eigen::Vector3f pos = Eigen::Vector3f(x * fxi + cxi, y * fyi + cyi, 1.0f) * depth;
         points[i] = pos;
 
         // debug log of five points with lowest variance, TODO remove
         if (i < 5) {
-            LOGD("%d: index[%d] = %f => (%.3f, %.3f, %.3f)", i, idx, depthVar[idx],
+            LOGD("%d: index[%d] = %f => (%.3f, %.3f, %.3f)", i, idx, idepthVar[idx],
                  pos.x(), pos.y(), pos.z());
         }
         q.pop();
@@ -80,23 +80,23 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
             "crop",
             width, height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
-    depthMap = new float[width * height];
-    depthVar = new float[width * height];
+    idepthMap = new float[width * height];
+    idepthVar = new float[width * height];
     points = std::vector<Eigen::Vector3f>(numPoints);
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         JNIEnv* env, jobject thiz,
         jlong grayImgAddress, jlong rgbaImgAddress, jlong depthImgAddress,
-        jfloatArray jDepthMap)
+        jfloatArray jiDepthMap)
 {
     cv::Mat& image = *(cv::Mat*)grayImgAddress;
     cv::Mat& out_image = *(cv::Mat*)rgbaImgAddress;
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    SE3 pose = slam->newImageCallback(undist_image, depthMap, depthVar, lsd_slam::Timestamp::now());
-    env->SetFloatArrayRegion(jDepthMap, 0, width * height, depthMap);
+    SE3 pose = slam->newImageCallback(undist_image, idepthMap, idepthVar, lsd_slam::Timestamp::now());
+    env->SetFloatArrayRegion(jiDepthMap, 0, width * height, idepthMap);
 
     getBestPoints();
 
