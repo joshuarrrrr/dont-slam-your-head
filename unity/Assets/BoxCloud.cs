@@ -34,8 +34,6 @@ public class BoxCloud : MonoBehaviour {
 			} else {
 				Vector3 pos = new Vector3(x, y, z) +
 					GetComponent<Transform>().position;
-				Debug.Log(i);
-				Debug.Log(pos);
 				cloud[i].GetComponent<Transform>().position = pos;
 				cloud[i].GetComponent<Renderer>().enabled = true;
 			}
