@@ -37,6 +37,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private float translation[] = {0.0f, 0.0f, 0.0f};
     private float rotation[] = {0.0f, 0.0f, 0.0f, 0.0f};
     private float idepth[] = null;
+    private int numPoints = 100;
+    private float points[] = null;
 
     static {
         System.loadLibrary("lsd-jni");
@@ -44,7 +46,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
 
     // native functions
     public native void initSLAM(int width, int height);
-    public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress, float[] depthMap);
+    public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress, float[] depthMap, float[] points);
     public native void resetSLAM();
 
     @Override
@@ -52,6 +54,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         super.onCreate(savedInstanceState);
         initSLAM(width, height);
         idepth = new float[width * height];
+        points = new float[numPoints * 3];
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -130,6 +133,10 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         return idepth;
     }
 
+    public float[] getPoints() {
+        return points;
+    }
+
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -192,7 +199,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
         updateSLAM(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), mDepth.getNativeObjAddr(),
-                idepth);
+                idepth, points);
         return mRgba;
     }
 

@@ -20,6 +20,7 @@
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 //#define STORE_DEBUG_IMAGES
+//#define DEBUG_PRINTS
 
 static lsd_slam::LiveSLAMWrapper* slam;
 static lsd_slam::UndistorterOpenCV* undistorter;
@@ -37,7 +38,7 @@ static float fyi;
 static float cxi;
 static float cyi;
 static int numPoints = 100;
-static std::vector<Eigen::Vector3f> points;
+static float* points= nullptr;
 
 
 void getBestPoints() {
@@ -51,14 +52,18 @@ void getBestPoints() {
         int x = idx % width;
         int y = idx / height;
         float depth = 1 / idepthMap[idx];
-        Eigen::Vector3f pos = Eigen::Vector3f(x * fxi + cxi, y * fyi + cyi, 1.0f) * depth;
-        points[i] = pos;
+        points[i * 3] = (x * fxi + cxi) * depth;
+        points[i * 3 + 1] = (y * fyi + cyi) * depth;
+        points[i * 3 + 2] = depth;
 
+        #ifdef DEBUG_PRINTS
         // debug log of five points with lowest variance, TODO remove
         if (i < 5) {
             LOGD("%d: index[%d] = %f => (%.3f, %.3f, %.3f)", i, idx, idepthVar[idx],
                  pos.x(), pos.y(), pos.z());
         }
+        #endif
+
         q.pop();
     }
 }
@@ -82,13 +87,13 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
     idepthMap = new float[width * height];
     idepthVar = new float[width * height];
-    points = std::vector<Eigen::Vector3f>(numPoints);
+    points = new float[numPoints * 3];
 }
 
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
         JNIEnv* env, jobject thiz,
         jlong grayImgAddress, jlong rgbaImgAddress, jlong depthImgAddress,
-        jfloatArray jiDepthMap)
+        jfloatArray jiDepthMap, jfloatArray jPoints)
 {
     cv::Mat& image = *(cv::Mat*)grayImgAddress;
     cv::Mat& out_image = *(cv::Mat*)rgbaImgAddress;
@@ -97,6 +102,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     undistorter->undistort(image, undist_image);
     SE3 pose = slam->newImageCallback(undist_image, idepthMap, idepthVar, lsd_slam::Timestamp::now());
     env->SetFloatArrayRegion(jiDepthMap, 0, width * height, idepthMap);
+    env->SetFloatArrayRegion(jPoints, 0, numPoints * 3, points);
 
     getBestPoints();
 
