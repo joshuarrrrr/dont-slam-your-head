@@ -705,6 +705,11 @@ void SlamSystem::getDepthMap(float* depthMap, float* depthVar) {
 }
 
 
+Sim3 SlamSystem::getCurrentKeyFrameCamToWorld() const {
+	return currentKeyFrame->getScaledCamToWorld();
+}
+
+
 void SlamSystem::takeRelocalizeResult()
 {
 	Frame* keyframe;

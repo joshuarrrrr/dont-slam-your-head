@@ -95,6 +95,8 @@ public:
 	/** Returns the current pose estimate. */
 	SE3 getCurrentPoseEstimate();
 
+	Sim3 getCurrentKeyFrameCamToWorld() const;
+
 	/** Sets the visualization where point clouds and camera poses will be sent to. */
 	void setVisualization(Output3DWrapper* outputWrapper);
 

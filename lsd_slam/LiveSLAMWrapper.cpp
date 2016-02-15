@@ -110,6 +110,7 @@ SE3 LiveSLAMWrapper::newImageCallback(
 	const cv::Mat& grayImg,
 	float* depthMap,
 	float* depthVar,
+	Sim3& crrntKeyFrameCamToWorld,
 	Timestamp imgTime)
 {
 	if (fullResetRequested) {
@@ -136,6 +137,7 @@ SE3 LiveSLAMWrapper::newImageCallback(
 		monoOdometry->trackFrame(grayImg.data,imageSeqNumber,false,imgTime.toSec());
 		//monoOdometry->debugDisplayDepthMap(depthImage);
 		monoOdometry->getDepthMap(depthMap, depthVar);
+		crrntKeyFrameCamToWorld = monoOdometry->getCurrentKeyFrameCamToWorld();
 	}
 	return monoOdometry->getCurrentPoseEstimate();
 }

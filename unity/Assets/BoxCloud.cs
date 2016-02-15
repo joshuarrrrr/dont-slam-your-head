@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BoxCloud : MonoBehaviour {
 
-	public int num = 100;
+	public int num = 500;
 
 	private GameObject box = null;
 

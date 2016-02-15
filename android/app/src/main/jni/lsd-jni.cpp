@@ -7,9 +7,13 @@
 #include <vector>
 #include <functional>
 
+#include <Eigen/Core>
+#include <sophus/sim3.hpp>
+
 #include <lsd_slam/LiveSLAMWrapper.h>
 #include <lsd_slam/IOWrapper/Timestamp.h>
 #include <lsd_slam/util/Undistorter.h>
+#include <lsd_slam/util/SophusUtil.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -37,8 +41,9 @@ static float fxi;
 static float fyi;
 static float cxi;
 static float cyi;
-static int numPoints = 100;
+static int numPoints = 500;
 static float* points= nullptr;
+static Sim3 camToWorld;
 
 
 void getBestPoints() {
@@ -52,9 +57,11 @@ void getBestPoints() {
         int x = idx % width;
         int y = idx / height;
         float depth = 1 / idepthMap[idx];
-        points[i * 3] = (x * fxi + cxi) * depth;
-        points[i * 3 + 1] = (y * fyi + cyi) * depth;
-        points[i * 3 + 2] = depth;
+        Sophus::Vector3f pos = camToWorld.cast<float>() * (Sophus::Vector3f((x * fxi + cxi), (y * fyi + cyi), 1) * depth);
+        //Eigen::Vector3f pos = Eigen::Vector3f(x * fxi + cxi, y * fyi + cyi, 1.0f) * depth;
+        points[i * 3] = pos[0];
+        points[i * 3 + 1] = pos[1];
+        points[i * 3 + 2] = pos[2];
 
         #ifdef DEBUG_PRINTS
         // debug log of five points with lowest variance, TODO remove
@@ -100,11 +107,10 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     cv::Mat& depth_image = *(cv::Mat*)depthImgAddress;
     cv::Mat undist_image;
     undistorter->undistort(image, undist_image);
-    SE3 pose = slam->newImageCallback(undist_image, idepthMap, idepthVar, lsd_slam::Timestamp::now());
+    SE3 pose = slam->newImageCallback(undist_image, idepthMap, idepthVar, camToWorld, lsd_slam::Timestamp::now());
+    getBestPoints();
     env->SetFloatArrayRegion(jiDepthMap, 0, width * height, idepthMap);
     env->SetFloatArrayRegion(jPoints, 0, numPoints * 3, points);
-
-    getBestPoints();
 
     #ifdef STORE_DEBUG_IMAGES
     ++frameCount;
