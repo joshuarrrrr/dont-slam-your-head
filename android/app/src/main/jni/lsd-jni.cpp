@@ -8,6 +8,7 @@
 #include <functional>
 
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <sophus/sim3.hpp>
 
 #include <lsd_slam/LiveSLAMWrapper.h>
@@ -23,7 +24,7 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-#define STORE_DEBUG_IMAGES
+//#define STORE_DEBUG_IMAGES
 //#define DEBUG_PRINTS
 
 static lsd_slam::LiveSLAMWrapper* slam;
@@ -33,16 +34,32 @@ static float* idepthMap = nullptr;
 static float* idepthVar = nullptr;
 static int width = 0;
 static int height = 0;
-static float fx = 275.831f;
+
+// values for 320x240 input images
+/*static float in_width = 320;
+static float in_height = 240;
+ static float fx = 275.831f;
 static float fy = 275.26f;
 static float cx = 159.32f;
 static float cy = 121.474f;
 static float k1 = 0.0454102f;
 static float k2 = 0.225756f;
 static float p1 = 0.00056932f;
-static float p2 = 0.000524407f;
-static float in_width = 320;
-static float in_height = 240;
+static float p2 = 0.000524407f;*/
+
+// values for 640x480 input images
+static float in_width = 640;
+static float in_height = 480;
+static float fx = 554.342f;
+static float fy = 553.345f;
+static float cx = 320.898f;
+static float cy = 243.149f;
+static float k1 = 0.0781625f;
+static float k2 = -0.243653f;
+static float p1 = -0.000555435f;
+static float p2 = -0.000276287f;
+
+
 static float fxi;
 static float fyi;
 static float cxi;
@@ -64,7 +81,6 @@ void getBestPoints() {
         int y = idx / height;
         float depth = 1 / idepthMap[idx];
         Sophus::Vector3f pos = camToWorld.cast<float>() * (Sophus::Vector3f((x * fxi + cxi), (y * fyi + cyi), 1) * depth);
-        //Eigen::Vector3f pos = Eigen::Vector3f(x * fxi + cxi, y * fyi + cyi, 1.0f) * depth;
         points[i * 3] = pos[0];
         points[i * 3 + 1] = pos[1];
         points[i * 3 + 2] = pos[2];
@@ -148,6 +164,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     //    cv::cvtColor(depth_image_rgba, out_image, CV_RGB2RGBA);
     //}
 
+    //Eigen::Vector3f trans = Eigen::AngleAxisf(M_PI, Eigen::Vector3f::UnitZ()) * pose.translation().cast<float>();
     Eigen::Vector3f trans = pose.translation().cast<float>();
     Sophus::Quaternionf quat = pose.unit_quaternion().cast<float>();
 

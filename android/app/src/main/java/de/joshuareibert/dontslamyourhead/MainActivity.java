@@ -32,8 +32,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private Mat mRgba;
     private Mat mGray;
     private Mat mDepth;
-    private int in_width = 320;
-    private int in_height = 240;
+    private int in_width = 640;
+    private int in_height = 480;
     private int width = 320;
     private int height = 240;
     private float translation[] = {0.0f, 0.0f, 0.0f};
