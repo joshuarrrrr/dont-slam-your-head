@@ -10,4 +10,18 @@ public static class MainActivity
 		public static AndroidJavaClass unityActivityClass;
 		public static AndroidJavaObject activityObj;
 	#endif
+
+	public static bool CallMethod(string name, params object[] args) {
+		if (activityClass == null) {
+			Debug.LogError("Object is null when calling method " + name);
+			return false;
+		}
+		try {
+			activityClass.Call(name, args);
+			return true;
+		} catch (AndroidJavaException e) {
+			Debug.LogError("Exception calling method " + name + ": " + e);
+			return false;
+		}
+	}
 }
