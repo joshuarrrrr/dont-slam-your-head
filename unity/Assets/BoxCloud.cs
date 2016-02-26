@@ -7,22 +7,22 @@ public class BoxCloud : MonoBehaviour {
 
 	private GameObject[] cloud;
 
-	public Vector3 boxSize = Vector3.one * 0.075F;
+	public Vector3 boxSize = Vector3.one * 0.1F;
 
 	// the unknown scale of the whole point cloud
-	public float cloudScale = 5.0F;
+	public float cloudScale = 2.0F;
 
 	private bool initialRotSet = false;
 	private Quaternion initialRot;
 
 	void Start () {
+		initialRot = Quaternion.identity;
 		initCloud();
 	}
 
 	void Update() {
 		if (!initialRotSet) {
 			var rot = Cardboard.SDK.HeadPose.Orientation;
-			Debug.Log("initial rotation: " + Quaternion.identity);
 			if (rot != Quaternion.identity) {
 				initialRot = rot;
 				initialRotSet = true;
@@ -36,8 +36,6 @@ public class BoxCloud : MonoBehaviour {
 
 		float[] points = MainActivity.activityObj.Call<float[]>("getPoints");
 
-		Vector3 offset = GetComponent<Transform>().position;
-
 		for (int i = 0; i < num; ++i) {
 			float x = points[i * 3];
 			float y = points[i * 3 + 1];
@@ -45,9 +43,8 @@ public class BoxCloud : MonoBehaviour {
 			if ((x == 0.0F) && (y == 0.0F) && (z == 0.0F)) {
 				cloud[i].GetComponent<Renderer>().enabled = false;
 			} else {
-				Vector3 pos = new Vector3(x, y, z) * cloudScale;
-				pos = initialRot * pos;
-				cloud[i].GetComponent<Transform>().position = pos + offset;
+				Vector3 pos = initialRot * (new Vector3(x, y, z) * cloudScale);
+				cloud[i].GetComponent<Transform>().position = pos;
 				cloud[i].GetComponent<Renderer>().enabled = true;
 			}
 		}
@@ -59,6 +56,8 @@ public class BoxCloud : MonoBehaviour {
 			cloud[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			cloud[i].GetComponent<Transform>().localScale = boxSize;
 			cloud[i].GetComponent<Renderer>().enabled = false;
+			cloud[i].GetComponent<Transform>().parent =
+				this.GetComponent<Transform>();
 		}
 	}
 
