@@ -191,4 +191,9 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_resetSLAM(
         JNIEnv* env, jobject thiz) {
     slam->requestReset();
 }
+
+JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_exportPointCloud(
+        JNIEnv* env, jobject thiz) {
+    slam->dumpMap("/sdcard/lsdslam/mapdump");
+}
 }

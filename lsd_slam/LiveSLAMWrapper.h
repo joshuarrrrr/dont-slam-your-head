@@ -72,6 +72,8 @@ public:
 	/** Writes the given time and pose to the outFile. */
 	void logCameraPose(const SE3& camToWorld, double time);
 
+	void dumpMap(std::string const& folder) const;
+
 
 	inline SlamSystem* getSlamSystem() {return monoOdometry;}
 

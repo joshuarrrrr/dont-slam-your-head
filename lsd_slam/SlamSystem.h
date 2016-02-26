@@ -110,6 +110,8 @@ public:
 
 	void publishKeyframeGraph();
 
+	void dumpMap(std::string const& folder) const;
+
 	void debugDisplayDepthMap(cv::Mat& depthMap);
 	void getDepthMap(float* depthMap, float* depthVar);
 

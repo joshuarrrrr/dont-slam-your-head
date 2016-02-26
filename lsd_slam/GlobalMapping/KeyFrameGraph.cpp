@@ -125,8 +125,8 @@ void KeyFrameGraph::dumpMap(std::string folder)
 
 	keyframesAllMutex.lock_shared();
 	char buf[100];
-	int succ = system(("rm -rf "+folder).c_str());
-	succ += system(("mkdir "+folder).c_str());
+	//int succ = system(("rm -rf "+folder).c_str());
+	//succ += system(("mkdir "+folder).c_str());
 
 	for(unsigned int i=0;i<keyframesAll.size();i++)
 	{
@@ -144,7 +144,7 @@ void KeyFrameGraph::dumpMap(std::string folder)
 	int i = keyframesAll.size()-1;
 	// Util::displayImage("VAR PREVIEW", getVarRedGreenPlot(keyframesAll[i]->idepthVar(),keyframesAll[i]->image(),keyframesAll[i]->width(),keyframesAll[i]->height()));
 
-	printf("DUMP MAP (succ %d): dumped %d depthmaps\n", succ,  (int)keyframesAll.size());
+	printf("DUMP MAP: dumped %d depthmaps\n",  (int)keyframesAll.size());
 
 	Eigen::MatrixXf res, resD, resP, huber, usage, consistency, distance, error;
 	Eigen::VectorXf meanRootInformation, usedPixels;
@@ -228,6 +228,31 @@ void KeyFrameGraph::dumpMap(std::string folder)
 
 	fle.open(folder+"/usedPixels.txt");
 	fle << usedPixels;
+	fle.close();
+
+	// write all the inverse depth values to a file
+	fle.open(folder+"/depthvalues.csv");
+	for (unsigned int i = 0; i < keyframesAll.size(); ++i) {
+		Frame* kf = keyframesAll[i];
+		fle << "KF#" << i << "\n";
+
+		// write camToWorld
+		SE3 camToWorld = se3FromSim3(kf->getScaledCamToWorld());
+		Eigen::Vector3f trans = camToWorld.translation().cast<float>();
+		Eigen::Quaternionf quat = camToWorld.unit_quaternion().cast<float>();
+		fle << trans[0] << "," << trans[1] << "," << trans[2] << "\n";
+		fle << quat.x() << "," << quat.y() << "," << quat.z() << "," << quat.w() << "\n";
+
+		// write all inverse depth values and variances
+		for (int j = 0; j < kf->width() * kf->height(); ++j) {
+			float idepth = kf->idepth(0)[j];
+			float idvar = kf->idepthVar(0)[j];
+
+			// only write pixels with an actual value
+			if ((idepth >= 0.0f) && (idvar >= 0.0f))
+				fle << idepth << "," << idvar << "," << kf->image(0)[j] << "\n";
+		}
+	}
 	fle.close();
 
 	printf("DUMP MAP: dumped %d edges\n", (int)edgesAll.size());

@@ -42,6 +42,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private int numPoints = 500;
     private float points[] = null;
 
+    private Activity _activity;
+
     static {
         System.loadLibrary("lsd-jni");
     }
@@ -50,6 +52,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     public native void initSLAM(int width, int height);
     public native void updateSLAM(long grayImgAddress, long rgbaImgAddress, long depthImgAddress, float[] depthMap, float[] points);
     public native void resetSLAM();
+    public native void exportPointCloud();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //setContentView(R.layout.activity_main);
+        _activity = UnityPlayer.currentActivity;
     }
 
     @Override
@@ -92,8 +96,6 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
         translation[0] = x;
         translation[1] = y;
         translation[2] = z;
-        Log.d("DSYH_TRANSLATION",
-                String.valueOf(x) + ", " + String.valueOf(y) + ", " + String.valueOf(z));
     }
 
     public void setRotation(float x, float y, float z, float w) {
@@ -217,5 +219,14 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
             UnityPlayer.currentActivity.addContentView(mCameraView, layoutParams);
         }
         mCameraView.enableView();
+    }
+
+    public void showToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(_activity, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -164,6 +164,10 @@ void LiveSLAMWrapper::logCameraPose(const SE3& camToWorld, double time)
 	outFile->flush();
 }
 
+void LiveSLAMWrapper::dumpMap(std::string const& folder) const {
+	monoOdometry->dumpMap(folder);
+}
+
 void LiveSLAMWrapper::requestReset()
 {
 	fullResetRequested = true;

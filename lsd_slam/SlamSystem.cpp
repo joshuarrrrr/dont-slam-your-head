@@ -389,6 +389,10 @@ void SlamSystem::publishKeyframeGraph()
 		outputWrapper->publishKeyframeGraph(keyFrameGraph);
 }
 
+void SlamSystem::dumpMap(std::string const& folder) const {
+	keyFrameGraph->dumpMap(folder);
+}
+
 void SlamSystem::requestDepthMapScreenshot(const std::string& filename)
 {
 	depthMapScreenshotFilename = filename;
@@ -775,11 +779,11 @@ bool SlamSystem::doMappingIteration()
 	mergeOptimizationOffset();
 	addTimingSamples();
 
-	if(dumpMap)
-	{
-		keyFrameGraph->dumpMap(packagePath+"/save");
-		dumpMap = false;
-	}
+	// if(dumpMap)
+	// {
+	// 	keyFrameGraph->dumpMap(packagePath+"/save");
+	// 	dumpMap = false;
+	// }
 
 
 	// set mappingFrame

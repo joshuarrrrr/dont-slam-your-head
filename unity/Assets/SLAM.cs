@@ -3,23 +3,21 @@ using System.Collections;
 
 public class SLAM : MonoBehaviour {
 
-	private Vector3 startPosition;
-	private Quaternion startRotation;
-
 	public bool TrackPosition = true;
 	public bool TrackRotation = true;
+
+	private Vector3 startPosition;
+	private Quaternion startRotation;
 
 	private float lastResetTime = 0.0F;
 	private float resetTimeout = 1.0F;
 
-	// Use this for initialization
 	void Start () {
 		Transform transform = GetComponent<Transform>();
 		startPosition = transform.position;
 		startRotation = transform.rotation;
 	}
 
-	// Update is called once per frame
 	void Update () {
 		if (TrackPosition) {
 			Vector3 trackingPosition = new Vector3(
@@ -39,18 +37,22 @@ public class SLAM : MonoBehaviour {
 			transform.rotation = quat;
 		}
 
-		if ((getTouchCount() >= 3) && (Time.time >= lastResetTime + resetTimeout)) {
+		int touchCount = getTouchCount();
+		if (touchCount == 4) {
+			this.ExportPointCloud();
+		}
+		if ((touchCount == 3) && (Time.time >= lastResetTime + resetTimeout)) {
 			this.Reset();
 		}
 	}
 
 	int getTouchCount() {
 		int count = 0;
-        foreach (Touch touch in Input.touches) {
-            if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
-                count++;
-        }
-        return count;
+		foreach (Touch touch in Input.touches) {
+			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
+				count++;
+		}
+		return count;
 	}
 
 	public void Reset() {
@@ -58,6 +60,14 @@ public class SLAM : MonoBehaviour {
 		lastResetTime = Time.time;
 		transform.position = startPosition;
 		transform.rotation = startRotation;
+		MainActivity.activityObj.Call("showToast", "reset");
 		Debug.Log("RESET");
+	}
+
+	public void ExportPointCloud() {
+		MainActivity.activityObj.Call("showToast", "exporting point cloud...");
+		MainActivity.activityObj.Call("exportPointCloud");
+		Debug.Log("EXPORTED POINT CLOUD");
+		MainActivity.activityObj.Call("showToast", "...done");
 	}
 }
