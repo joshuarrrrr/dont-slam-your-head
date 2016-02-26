@@ -23,7 +23,7 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-//#define STORE_DEBUG_IMAGES
+#define STORE_DEBUG_IMAGES
 //#define DEBUG_PRINTS
 
 static lsd_slam::LiveSLAMWrapper* slam;
@@ -33,10 +33,16 @@ static float* idepthMap = nullptr;
 static float* idepthVar = nullptr;
 static int width = 0;
 static int height = 0;
-static float fx = 1100.66f;
-static float fy = 1100.66f;
-static float cx = 639.5f;
-static float cy = 359.5f;
+static float fx = 275.831f;
+static float fy = 275.26f;
+static float cx = 159.32f;
+static float cy = 121.474f;
+static float k1 = 0.0454102f;
+static float k2 = 0.225756f;
+static float p1 = 0.00056932f;
+static float p2 = 0.000524407f;
+static float in_width = 320;
+static float in_height = 240;
 static float fxi;
 static float fyi;
 static float cxi;
@@ -87,8 +93,8 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
     cxi = -cx / fx;
     cyi = -cy / fy;
     undistorter = new lsd_slam::UndistorterOpenCV(
-            fx, fy, cx, cy, 0.0737079, -0.0529861, 0, 0,
-            1280, 720,
+            fx, fy, cx, cy, k1, k2, p1, p2,
+            in_width, in_height,
             "crop",
             width, height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);

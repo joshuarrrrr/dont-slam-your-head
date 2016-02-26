@@ -32,6 +32,8 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private Mat mRgba;
     private Mat mGray;
     private Mat mDepth;
+    private int in_width = 320;
+    private int in_height = 240;
     private int width = 320;
     private int height = 240;
     private float translation[] = {0.0f, 0.0f, 0.0f};
@@ -209,7 +211,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
             mCameraView = new CameraView(getApplicationContext(), 0);
             mCameraView.setVisibility(SurfaceView.VISIBLE);
             mCameraView.setCvCameraViewListener(this);
-            mCameraView.setResolution(1280, 720);
+            mCameraView.setResolution(in_width, in_height);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             UnityPlayer.currentActivity.addContentView(mCameraView, layoutParams);
