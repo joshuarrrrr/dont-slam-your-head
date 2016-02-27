@@ -230,27 +230,29 @@ void KeyFrameGraph::dumpMap(std::string folder)
 	fle << usedPixels;
 	fle.close();
 
-	// write all the inverse depth values to a file
+	// write all relevant inverse depth values to a file
 	fle.open(folder+"/depthvalues.csv");
 	for (unsigned int i = 0; i < keyframesAll.size(); ++i) {
 		Frame* kf = keyframesAll[i];
-		fle << "KF#" << i << "\n";
 
 		// write camToWorld
 		SE3 camToWorld = se3FromSim3(kf->getScaledCamToWorld());
 		Eigen::Vector3f trans = camToWorld.translation().cast<float>();
 		Eigen::Quaternionf quat = camToWorld.unit_quaternion().cast<float>();
-		fle << trans[0] << "," << trans[1] << "," << trans[2] << "\n";
-		fle << quat.x() << "," << quat.y() << "," << quat.z() << "," << quat.w() << "\n";
+		fle << 	"KF#" << i <<
+				trans[0] << "," << trans[1] << "," << trans[2] <<
+				quat.x() << "," << quat.y() << "," << quat.z() << "," <<
+				quat.w() << "\n";
 
-		// write all inverse depth values and variances
+		// iterate over pixels of the current keyframe
 		for (int j = 0; j < kf->width() * kf->height(); ++j) {
 			float idepth = kf->idepth(0)[j];
 			float idvar = kf->idepthVar(0)[j];
 
 			// only write pixels with an actual value
 			if ((idepth >= 0.0f) && (idvar >= 0.0f))
-				fle << idepth << "," << idvar << "," << kf->image(0)[j] << "\n";
+				fle << 	j << "," << idepth << "," << idvar << "," <<
+						kf->image(0)[j] << "\n";
 		}
 	}
 	fle.close();
