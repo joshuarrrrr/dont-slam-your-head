@@ -239,8 +239,8 @@ void KeyFrameGraph::dumpMap(std::string folder)
 		SE3 camToWorld = se3FromSim3(kf->getScaledCamToWorld());
 		Eigen::Vector3f trans = camToWorld.translation().cast<float>();
 		Eigen::Quaternionf quat = camToWorld.unit_quaternion().cast<float>();
-		fle << 	"KF#" << i <<
-				trans[0] << "," << trans[1] << "," << trans[2] <<
+		fle << 	"KF#" << i << "," <<
+				trans[0] << "," << trans[1] << "," << trans[2] << "," <<
 				quat.x() << "," << quat.y() << "," << quat.z() << "," <<
 				quat.w() << "\n";
 
