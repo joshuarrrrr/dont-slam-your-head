@@ -236,13 +236,15 @@ void KeyFrameGraph::dumpMap(std::string folder)
 		Frame* kf = keyframesAll[i];
 
 		// write camToWorld
-		float* sim3 = kf->getScaledCamToWorld().cast<float>().data();
-		fle << 	"KF#" << i << "," << sim3[0] << "," <<
-				sim3[1] << "," << sim3[2] << "," << sim3[3] << "," <<
-				sim3[4] << "," << sim3[5] << "," << sim3[6] << "," <<
-				kf->width(0) << "," << kf->height(0) << "," <<
-				kf->fx(0) << "," << kf->fy(0) << "," <<
-				kf->cx(0) << "," << kf->cy(0) << "\n";
+		Sophus::Sim3f sim3 = kf->getScaledCamToWorld().cast<float>();
+		fle 	<< "KF#" << i << ","
+			<< sim3.data()[0] << "," << sim3.data()[1] << ","
+			<< sim3.data()[2] << "," << sim3.data()[3] << ","
+			<< sim3.data()[4] << "," << sim3.data()[5] << ","
+			<< sim3.data()[6] << ","
+			<< kf->width(0) << "," << kf->height(0) << ","
+			<< kf->fx(0) << "," << kf->fy(0) << ","
+			<< kf->cx(0) << "," << kf->cy(0) << "\n";
 
 		// iterate over pixels of the current keyframe
 		for (int j = 0; j < kf->width() * kf->height(); ++j) {
