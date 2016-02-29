@@ -236,13 +236,13 @@ void KeyFrameGraph::dumpMap(std::string folder)
 		Frame* kf = keyframesAll[i];
 
 		// write camToWorld
-		SE3 camToWorld = se3FromSim3(kf->getScaledCamToWorld());
-		Eigen::Vector3f trans = camToWorld.translation().cast<float>();
-		Eigen::Quaternionf quat = camToWorld.unit_quaternion().cast<float>();
-		fle << 	"KF#" << i << "," <<
-				trans[0] << "," << trans[1] << "," << trans[2] << "," <<
-				quat.x() << "," << quat.y() << "," << quat.z() << "," <<
-				quat.w() << "\n";
+		float* sim3 = kf->getScaledCamToWorld().cast<float>().data();
+		fle << 	"KF#" << i << "," << sim3[0] << "," <<
+				sim3[1] << "," << sim3[2] << "," << sim3[3] << "," <<
+				sim3[4] << "," << sim3[5] << "," << sim3[6] << "," <<
+				kf->width(0) << "," << kf->height(0) << "," <<
+				kf->fx(0) << "," << kf->fy(0) << "," <<
+				kf->cx(0) << "," << kf->cy(0) << "\n";
 
 		// iterate over pixels of the current keyframe
 		for (int j = 0; j < kf->width() * kf->height(); ++j) {
