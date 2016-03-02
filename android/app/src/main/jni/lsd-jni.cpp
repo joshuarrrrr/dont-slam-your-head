@@ -32,8 +32,6 @@ static lsd_slam::UndistorterOpenCV* undistorter;
 static int frameCount = 0;
 static float* idepthMap = nullptr;
 static float* idepthVar = nullptr;
-static int width = 0;
-static int height = 0;
 
 // values for 320x240 input images
 /*static float in_width = 320;
@@ -48,22 +46,31 @@ static float p1 = 0.00056932f;
 static float p2 = 0.000524407f;*/
 
 // values for 640x480 input images
-static float in_width = 640;
-static float in_height = 480;
-static float fx = 554.342f;
-static float fy = 553.345f;
-static float cx = 320.898f;
-static float cy = 243.149f;
-static float k1 = 0.0781625f;
-static float k2 = -0.243653f;
-static float p1 = -0.000555435f;
-static float p2 = -0.000276287f;
+static unsigned int in_width = 640;
+static unsigned int in_height = 480;
+static float in_fx = 554.342f;
+static float in_fy = 553.345f;
+static float in_cx = 320.898f;
+static float in_cy = 243.149f;
+static float in_k1 = 0.0781625f;
+static float in_k2 = -0.243653f;
+static float in_p1 = -0.000555435f;
+static float in_p2 = -0.000276287f;
+
+// values for the undistored images
+// TODO: get these values from the undistorter
+static unsigned int out_width = 320;
+static unsigned int out_height = 240;
+static float out_fx = 276.011f;
+static float out_fy = 277.207f;
+static float out_cx = 159.893f;
+static float out_cy = 120.989f;
+static float fxi = 1.0 / out_fx;
+static float fyi = 1.0 / out_fy;
+static float cxi = -out_cx / out_fx;
+static float cyi = -out_cy / out_fy;
 
 
-static float fxi;
-static float fyi;
-static float cxi;
-static float cyi;
 static int numPoints = 500;
 static float* points= nullptr;
 static Sim3 camToWorld;
@@ -72,18 +79,19 @@ static Sim3 camToWorld;
 void getBestPoints() {
     typedef std::pair<float, int> P;
     std::priority_queue<P, std::vector<P>, std::greater<P>> q;
-    for (int i = 0; i < width * height; ++i) {
+    for (int i = 0; i < out_width * out_height; ++i) {
         q.push(std::pair<float, int>(idepthVar[i], i));
     }
     for (int i = 0; i < numPoints; ++i) {
         int idx = q.top().second;
-        int x = idx % width;
-        int y = idx / height;
-        float depth = 1 / idepthMap[idx];
-        Sophus::Vector3f pos = camToWorld.cast<float>() * (Sophus::Vector3f((x * fxi + cxi), (y * fyi + cyi), 1) * depth);
-        points[i * 3] = pos[0];
-        points[i * 3 + 1] = pos[1];
-        points[i * 3 + 2] = pos[2];
+        int x = idx % out_width;
+        int y = idx / out_height;
+        float depth = 1.0 / idepthMap[idx];
+        Sophus::Vector3f pos((x * fxi + cxi) * depth, (y * fyi + cyi) * depth, depth);
+        Sophus::Vector3f world_pos = camToWorld.cast<float>() * pos;
+        points[i * 3] = world_pos[0];
+        points[i * 3 + 1] = world_pos[1];
+        points[i * 3 + 2] = world_pos[2];
 
         #ifdef DEBUG_PRINTS
         // debug log of five points with lowest variance, TODO remove
@@ -102,20 +110,14 @@ extern "C" {
 JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_initSLAM(
         JNIEnv* env, jobject thiz,
         int w, int h) {
-    width = w;
-    height = h;
-    fxi = 1 / fx;
-    fyi = 1 / fy;
-    cxi = -cx / fx;
-    cyi = -cy / fy;
     undistorter = new lsd_slam::UndistorterOpenCV(
-            fx, fy, cx, cy, k1, k2, p1, p2,
+            in_fx, in_fy, in_cx, in_cy, in_k1, in_k2, in_p1, in_p2,
             in_width, in_height,
             "crop",
-            width, height);
+            out_width, out_height);
     slam = new lsd_slam::LiveSLAMWrapper(undistorter);
-    idepthMap = new float[width * height];
-    idepthVar = new float[width * height];
+    idepthMap = new float[out_width * out_height];
+    idepthVar = new float[out_width * out_height];
     points = new float[numPoints * 3];
 }
 
@@ -131,7 +133,7 @@ JNIEXPORT void Java_de_joshuareibert_dontslamyourhead_MainActivity_updateSLAM(
     undistorter->undistort(image, undist_image);
     SE3 pose = slam->newImageCallback(undist_image, idepthMap, idepthVar, camToWorld, lsd_slam::Timestamp::now());
     getBestPoints();
-    env->SetFloatArrayRegion(jiDepthMap, 0, width * height, idepthMap);
+    env->SetFloatArrayRegion(jiDepthMap, 0, out_width * out_height, idepthMap);
     env->SetFloatArrayRegion(jPoints, 0, numPoints * 3, points);
 
     #ifdef STORE_DEBUG_IMAGES
