@@ -36,7 +36,10 @@ public class SLAM : MonoBehaviour {
 				MainActivity.activityObj.Call<float>("getRotationZ"),
 				MainActivity.activityObj.Call<float>("getRotationW")
 				);
-			transform.rotation = quat;
+			Vector3 euler = quat.eulerAngles;
+			euler.x = -euler.x;
+			euler.z = -euler.z;
+			transform.rotation = Quaternion.Euler(euler);
 		}
 
 		int touchCount = getTouchCount();
@@ -45,6 +48,9 @@ public class SLAM : MonoBehaviour {
 		}
 		if ((touchCount == 3) && (Time.time >= lastResetTime + resetTimeout)) {
 			this.Reset();
+			GameObject go = GameObject.Find("CardboardMain");
+			BoxCloud cloud = (BoxCloud) go.GetComponent(typeof(BoxCloud));
+			cloud.Reset();
 		}
 	}
 
