@@ -1,16 +1,18 @@
+// #if UNITY_ANDROID
+
 using UnityEngine;
 using System.Collections;
 
 public class BoxCloud : MonoBehaviour {
 
-	public int num = 500;
+	public int num = 1000;
 
 	private GameObject[] cloud;
 
-	public Vector3 boxSize = Vector3.one * 0.1F;
+	public float boxSize = 0.01F;
 
 	// the unknown scale of the whole point cloud
-	public float cloudScale = 2.0F;
+	public float cloudScale = 1.0F;
 
 	private bool initialRotSet = false;
 	private Quaternion initialRot;
@@ -43,8 +45,8 @@ public class BoxCloud : MonoBehaviour {
 			if ((x == 0.0F) && (y == 0.0F) && (z == 0.0F)) {
 				cloud[i].GetComponent<Renderer>().enabled = false;
 			} else {
-				Vector3 pos = initialRot * (new Vector3(x, y, z) * cloudScale);
-				cloud[i].GetComponent<Transform>().position = pos;
+				Vector3 pos = initialRot * (new Vector3(x, -y, z) * cloudScale);
+				cloud[i].GetComponent<Transform>().localPosition = pos;
 				cloud[i].GetComponent<Renderer>().enabled = true;
 			}
 		}
@@ -54,7 +56,8 @@ public class BoxCloud : MonoBehaviour {
 		cloud = new GameObject[num];
 		for (int i = 0; i < num; ++i) {
 			cloud[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			cloud[i].GetComponent<Transform>().localScale = boxSize;
+			cloud[i].GetComponent<Transform>().localScale =
+				Vector3.one * boxSize;
 			cloud[i].GetComponent<Renderer>().enabled = false;
 			cloud[i].GetComponent<Transform>().parent =
 				this.GetComponent<Transform>();
@@ -70,3 +73,5 @@ public class BoxCloud : MonoBehaviour {
 		cloudScale = scale;
 	}
 }
+
+// #endif
