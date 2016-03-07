@@ -39,7 +39,7 @@ public class MainActivity extends UnityPlayerActivity implements CvCameraViewLis
     private float translation[] = {0.0f, 0.0f, 0.0f};
     private float rotation[] = {0.0f, 0.0f, 0.0f, 0.0f};
     private float idepth[] = null;
-    private int numPoints = 500;
+    private int numPoints = 1000;
     private float points[] = null;
 
     private Activity _activity;

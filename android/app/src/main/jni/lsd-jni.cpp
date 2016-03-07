@@ -79,7 +79,7 @@ static Sim3 camToWorld;
 void getBestPoints() {
     typedef std::pair<float, int> P;
     std::priority_queue<P, std::vector<P>, std::greater<P>> q;
-    for (int i = 0; i < out_width * out_height; ++i) {
+    for (int i = 0; i < out_width * out_height; i += 13) {
         q.push(std::pair<float, int>(idepthVar[i], i));
     }
     for (int i = 0; i < numPoints; ++i) {
