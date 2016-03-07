@@ -11,6 +11,8 @@ public class BoxCloud : MonoBehaviour {
 
 	public float boxSize = 0.01F;
 
+	public Material material;
+
 	// the unknown scale of the whole point cloud
 	public float cloudScale = 1.0F;
 
@@ -47,7 +49,13 @@ public class BoxCloud : MonoBehaviour {
 			} else {
 				Vector3 pos = initialRot * (new Vector3(x, -y, z) * cloudScale);
 				cloud[i].GetComponent<Transform>().localPosition = pos;
+				float distance = Mathf.Clamp01(
+					(cloud[i].GetComponent<Transform>().position -
+					GetComponent<Transform>().position).magnitude / 2.0F - 0.3F
+					);
 				cloud[i].GetComponent<Renderer>().enabled = true;
+				cloud[i].GetComponent<Renderer>().material.color =
+					Color.Lerp(Color.red, Color.green, distance);
 			}
 		}
 	}
@@ -59,6 +67,7 @@ public class BoxCloud : MonoBehaviour {
 			cloud[i].GetComponent<Transform>().localScale =
 				Vector3.one * boxSize;
 			cloud[i].GetComponent<Renderer>().enabled = false;
+			cloud[i].GetComponent<Renderer>().material = material;
 			cloud[i].GetComponent<Transform>().parent =
 				this.GetComponent<Transform>();
 		}
