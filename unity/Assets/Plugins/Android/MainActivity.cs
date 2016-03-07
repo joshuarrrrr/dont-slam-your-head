@@ -1,4 +1,7 @@
+#if UNITY_ANDROID
+
 using UnityEngine;
+
 public static class MainActivity
 {
 	#if UNITY_ANDROID && !UNITY_EDITOR
@@ -25,3 +28,5 @@ public static class MainActivity
 		}
 	}
 }
+
+#endif
