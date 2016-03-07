@@ -13,6 +13,8 @@ public class BoxCloud : MonoBehaviour {
 
 	public Material material;
 
+	public Transform head;
+
 	// the unknown scale of the whole point cloud
 	public float cloudScale = 1.0F;
 
@@ -51,7 +53,7 @@ public class BoxCloud : MonoBehaviour {
 				cloud[i].GetComponent<Transform>().localPosition = pos;
 				float distance = Mathf.Clamp01(
 					(cloud[i].GetComponent<Transform>().position -
-					GetComponent<Transform>().position).magnitude / 2.0F - 0.3F
+					head.position).magnitude
 					);
 				cloud[i].GetComponent<Renderer>().enabled = true;
 				cloud[i].GetComponent<Renderer>().material.color =
