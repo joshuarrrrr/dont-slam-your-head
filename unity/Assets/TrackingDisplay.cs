@@ -10,7 +10,7 @@ public class TrackingDisplay : MonoBehaviour {
 	void Update() {
 		Vector3 pos = new Vector3(
 			MainActivity.activityObj.Call<float>("getTranslationX"),
-			MainActivity.activityObj.Call<float>("getTranslationY"),
+			-MainActivity.activityObj.Call<float>("getTranslationY"),
 			MainActivity.activityObj.Call<float>("getTranslationZ")
 			);
 

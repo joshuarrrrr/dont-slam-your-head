@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+#if UNITY_ANDROID
+
+using UnityEngine;
 using System.Collections;
 
 public class SLAM : MonoBehaviour {
@@ -22,7 +24,7 @@ public class SLAM : MonoBehaviour {
 		if (TrackPosition) {
 			Vector3 trackingPosition = new Vector3(
 				MainActivity.activityObj.Call<float>("getTranslationX"),
-				MainActivity.activityObj.Call<float>("getTranslationY"),
+				-MainActivity.activityObj.Call<float>("getTranslationY"),
 				MainActivity.activityObj.Call<float>("getTranslationZ")
 				);
 			transform.position = startPosition + trackingPosition;
@@ -71,3 +73,5 @@ public class SLAM : MonoBehaviour {
 		MainActivity.activityObj.Call("showToast", "...done");
 	}
 }
+
+#endif
